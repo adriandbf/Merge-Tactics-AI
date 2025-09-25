@@ -5,6 +5,7 @@ client = InferenceHTTPClient(
     api_key=""
 )
 
+# doesnt work with multiple card images in one png, have to split cards into 3 seperate pngs
 result1 = client.run_workflow(
     workspace_name="adriandbf",
     workflow_id="carddetection",
@@ -14,7 +15,6 @@ result1 = client.run_workflow(
     use_cache=True # cache workflow definition for 15 minutes
 )
 
-# print(result)
 
 result2 = client.run_workflow(
     workspace_name="adriandbf",
