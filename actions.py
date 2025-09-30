@@ -25,8 +25,19 @@ class Actions:
             self.CARD_BAR_WIDTH = 1312 - 1058
             self.CARD_BAR_HEIGHT = 956 - 856
         elif self.os_type == "Windows":
-            pass #TODO: Get cords for windows device when blue stacks height is sized to full screen and the window is as far right as possible without cutting off the application
+            self.TOP_LEFT_X = 1413
+            self.TOP_LEFT_Y = 125
+            self.BOTTOM_RIGHT_X = 1822
+            self.BOTTOM_RIGHT_Y = 725
+            self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
+            self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
+            self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
+
+            self.CARD_BAR_X = 1477
+            self.CARD_BAR_Y = 796
+            self.CARD_BAR_WIDTH = 1753 - 1477
+            self.CARD_BAR_HEIGHT = 905 - 796
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
             1: '2',  # Changed from 2 to 1
@@ -49,12 +60,12 @@ class Actions:
         ))
         screenshot.save(save_path)
 
-        card_width = self.CARD_BAR_WIDTH
+        card_width = self.CARD_BAR_WIDTH/3
         cards = []
 
         for i in range(3):
             left = i * card_width
-            card_img = screenshot.crop((left, 0, left * card_width, self.CARD_BAR_HEIGHT))
+            card_img = screenshot.crop((left, 0, left + card_width, self.CARD_BAR_HEIGHT))
             save_path = os.path.join(self.script_dir, 'screenshots', f"card_{i+1}.png")
             card_img.save(save_path)
             cards.append(save_path)
