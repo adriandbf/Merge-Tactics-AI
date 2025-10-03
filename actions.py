@@ -46,6 +46,10 @@ class Actions:
         
         self.current_card_positions = {}
 
+        # click in game window for keyboard presses to show up there
+        pyautogui.click(x=self.TOP_LEFT_X + 0.5* self.WIDTH, y=self.TOP_LEFT_Y + 0.5* self.HEIGHT)
+
+
     def capture_area(self, save_path):
         screenshot = pyautogui.screenshot(region=(self.TOP_LEFT_X, self.TOP_LEFT_Y, self.WIDTH, self.HEIGHT))
         screenshot.save(save_path)
@@ -76,11 +80,15 @@ class Actions:
         #TODO
         pass
 
+    def select_card(self,action_nr):
+        pyautogui.press(str(action_nr))
+
 # testing screen capture functions
 def main():
     a = Actions()
     a.capture_area("area.png")
     a.capture_card_area("card_area.png")
+    a.select_card(2)
 
 if __name__ == "__main__":
     main()
