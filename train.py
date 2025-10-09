@@ -1,6 +1,8 @@
 # Training of an agent
 # till now: almost only copy and paste from https://github.com/krazyness/CRBot-public/blob/main/env.py
 
+#? start state
+
 import os
 import torch
 import glob

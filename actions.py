@@ -25,19 +25,19 @@ class Actions:
             self.CARD_BAR_WIDTH = 1312 - 1058
             self.CARD_BAR_HEIGHT = 956 - 856
         elif self.os_type == "Windows":
-            self.TOP_LEFT_X = 1413
-            self.TOP_LEFT_Y = 125
-            self.BOTTOM_RIGHT_X = 1822
-            self.BOTTOM_RIGHT_Y = 725
+            self.TOP_LEFT_X = 1454
+            self.TOP_LEFT_Y = 362
+            self.BOTTOM_RIGHT_X = 1804
+            self.BOTTOM_RIGHT_Y = 745
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
-            self.CARD_BAR_X = 1477
-            self.CARD_BAR_Y = 796
-            self.CARD_BAR_WIDTH = 1753 - 1477
-            self.CARD_BAR_HEIGHT = 905 - 796
+            self.CARD_BAR_X = 1458
+            self.CARD_BAR_Y = 828
+            self.CARD_BAR_WIDTH = 1708 - 1458
+            self.CARD_BAR_HEIGHT = 926 - 828
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
             1: '2',  # Changed from 2 to 1
@@ -46,8 +46,14 @@ class Actions:
         
         self.current_card_positions = {}
 
-        # click in game window for keyboard presses to show up there
-        pyautogui.click(x=self.TOP_LEFT_X + 0.5* self.WIDTH, y=self.TOP_LEFT_Y + 0.5* self.HEIGHT)
+        # click in game window for keyboard presses to show up there without performing any action
+        if self.os_type == "Windows":
+            pyautogui.click(1407, 868)
+
+        elif self.os_type == "Darwin":
+            # TO DO: set up darwin option
+            # pyautogui.click( ... , ...)
+            pass
 
 
     def capture_area(self, save_path):
@@ -64,12 +70,12 @@ class Actions:
         ))
         screenshot.save(save_path)
 
-        card_width = self.CARD_BAR_WIDTH/3
+        self.card_width = self.CARD_BAR_WIDTH/3
         cards = []
 
         for i in range(3):
-            left = i * card_width
-            card_img = screenshot.crop((left, 0, left + card_width, self.CARD_BAR_HEIGHT))
+            left = i * self.card_width
+            card_img = screenshot.crop((left, 0, left + self.card_width, self.CARD_BAR_HEIGHT))
             save_path = os.path.join(self.script_dir, 'screenshots', f"card_{i+1}.png")
             card_img.save(save_path)
             cards.append(save_path)
@@ -81,14 +87,30 @@ class Actions:
         pass
 
     def select_card(self,action_nr):
-        pyautogui.press(str(action_nr))
+        # assume action_nr between 0 and 2
+        pyautogui.click(self.CARD_BAR_X + ((action_nr +1) - 0.5) * self.card_width , self.CARD_BAR_Y + 0.5 * self.CARD_BAR_HEIGHT)
+    
+    def press_replay_button(self):
+
+        if self.os_type == "Windows":
+            self.REPLAY_BUTTON_X = 1527
+            self.REPLAY_BUTTON_Y = 870
+
+        elif self.os_type == "Darwin":
+            # TO DO: set up darwin option
+            # self.REPLAY_BUTTON_X = ...
+            # self.REPLAY_BUTTON_Y = ...
+            pass
+
+        pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
+
 
 # testing screen capture functions
 def main():
     a = Actions()
     a.capture_area("area.png")
     a.capture_card_area("card_area.png")
-    a.select_card(2)
+    a.select_card(1)
 
 if __name__ == "__main__":
     main()

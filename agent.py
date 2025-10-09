@@ -1,5 +1,5 @@
 # Implementation of a Deep-Q-Learning agent
-# till almost only copy and paste from https://github.com/krazyness/CRBot-public/blob/main/env.py
+# till now: almost only copy and paste from https://github.com/krazyness/CRBot-public/blob/main/env.py
 
 import os
 import torch
