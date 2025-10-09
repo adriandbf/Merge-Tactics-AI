@@ -43,7 +43,7 @@ class ClashRoyaleEnv:
         next_state_array = [card_1_class] + [card_2_class] + [card_3_class] + troops_classes
 
         if len(next_state_array) < self.state_size:
-            next_state_array += [0] * (self.state_size - len(state_list))
+            next_state_array += [0] * (self.state_size - len(next_state_array))
         else:
             next_state_array = next_state_array[:self.state_size]
 
