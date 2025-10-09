@@ -20,10 +20,11 @@ class ClashRoyaleEnv:
     # TO DO: implement done flag
     # TO DO: implement reward
     def step(self, action_index):
+        actor = Actions()
         # assume action_index from 0 to 2
-        Actions.select_card()
-        Actions.capture_area
-        Actions.capture_card_area
+        actor.select_card(action_index)
+        actor.capture_area
+        actor.capture_card_area
 
         # get detection arrays
         detector = Detection()
@@ -36,9 +37,13 @@ class ClashRoyaleEnv:
         troops_classes = []
         for troop in troops:
             troops_classes.append(troop['class_id'])
-        card_1_class = card_1['class_id']
-        card_2_class = card_2['class_id']
-        card_3_class = card_3['class_id']
+
+        for card in card_1:
+           card_1_class = card['class_id']
+        for card in card_2:
+            card_2_class = card['class_id']
+        for card in card_3:
+            card_3_class = card['class_id']
 
         next_state_array = [card_1_class] + [card_2_class] + [card_3_class] + troops_classes
 
