@@ -38,6 +38,9 @@ class Actions:
             self.CARD_BAR_Y = 828
             self.CARD_BAR_WIDTH = 1708 - 1458
             self.CARD_BAR_HEIGHT = 926 - 828
+
+            self.card_width = self.CARD_BAR_WIDTH/3
+            
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
             1: '2',  # Changed from 2 to 1
@@ -70,7 +73,6 @@ class Actions:
         ))
         screenshot.save(save_path)
 
-        self.card_width = self.CARD_BAR_WIDTH/3
         cards = []
 
         for i in range(3):
