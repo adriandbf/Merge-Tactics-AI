@@ -82,7 +82,7 @@ class DQNAgent:
             target = reward                                                 # target value is the current reward to start with
             if not done:
                 target += self.gamma * torch.max(self.target_model(torch.FloatTensor(next_state)))
-                # if the state is not terminal: add the maximal ecpected q value of teh next state to the target
+                # if the state is not terminal: add the maximal ecpected q value of the next state to the target
                 # use target_model for more stabilized values
                 # use gamma to reduce the influence of the q vaules of the next state
             
@@ -94,7 +94,7 @@ class DQNAgent:
             prediction = self.model(torch.FloatTensor(state))[action]       # get predicted q value from the current model for the current action
             loss = self.criterion(prediction, target_f[action].detach())    # loss function calculates how far prediction q value is from target q value
 
-            # updates network weigths with hepl of gradients 
+            # updates network weigths with help of gradients 
             self.optimizer.zero_grad() 
             loss.backward()
             self.optimizer.step()

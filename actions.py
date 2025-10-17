@@ -24,6 +24,8 @@ class Actions:
             self.CARD_BAR_Y = 856
             self.CARD_BAR_WIDTH = 1312 - 1058
             self.CARD_BAR_HEIGHT = 956 - 856
+            self.card_width = self.CARD_BAR_WIDTH/3
+
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1454
             self.TOP_LEFT_Y = 362
@@ -38,9 +40,8 @@ class Actions:
             self.CARD_BAR_Y = 828
             self.CARD_BAR_WIDTH = 1708 - 1458
             self.CARD_BAR_HEIGHT = 926 - 828
-
             self.card_width = self.CARD_BAR_WIDTH/3
-            
+
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
             1: '2',  # Changed from 2 to 1
@@ -54,17 +55,18 @@ class Actions:
             pyautogui.click(1407, 868)
 
         elif self.os_type == "Darwin":
-            # TO DO: set up darwin option
-            # pyautogui.click( ... , ...)
-            pass
+            pyautogui.click(1407, 868)
 
-
-    def capture_area(self, save_path):
+    def capture_area(self, save_path=None):
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "area.png")
         screenshot = pyautogui.screenshot(region=(self.TOP_LEFT_X, self.TOP_LEFT_Y, self.WIDTH, self.HEIGHT))
         screenshot.save(save_path)
 
-    def capture_card_area(self, save_path):
+    def capture_card_area(self, save_path=None):
         """Capture screenshot of card area"""
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "card_area.png")
         screenshot = pyautogui.screenshot(region=(
             self.CARD_BAR_X, 
             self.CARD_BAR_Y, 
@@ -99,19 +101,20 @@ class Actions:
             self.REPLAY_BUTTON_Y = 870
 
         elif self.os_type == "Darwin":
-            # TO DO: set up darwin option
-            # self.REPLAY_BUTTON_X = ...
-            # self.REPLAY_BUTTON_Y = ...
-            pass
+            self.REPLAY_BUTTON_X = 1123
+            self.REPLAY_BUTTON_Y = 904
 
         pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
 
 
 # testing screen capture functions
 def main():
+
+    folder = "screenshots"
+
     a = Actions()
-    a.capture_area("area.png")
-    a.capture_card_area("card_area.png")
+    a.capture_area(os.path.join(folder, "area.png"))
+    a.capture_card_area(os.path.join(folder, "card_area.png"))
     a.select_card(1)
 
 if __name__ == "__main__":

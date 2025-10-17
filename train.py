@@ -7,7 +7,7 @@ import os
 import torch
 import glob
 import json
-from env import ClashRoyaleEnv
+from env import MergeTacticsEnv
 from agent import DQNAgent
 from pynput import keyboard
 from datetime import datetime
@@ -41,7 +41,7 @@ def get_latest_model_path(models_dir="models"):
 
 def train():
     
-    env = ClashRoyaleEnv()
+    env = MergeTacticsEnv()
     agent = DQNAgent(env.state_size, env.action_size)
 
     # Ensure models directory exists
@@ -70,8 +70,10 @@ def train():
             break
 
         state = env.reset()
-        print(f"Episode {ep + 1} starting. Epsilon: {agent.epsilon:.3f}") 
         total_reward = 0
+
+        print(f"Episode {ep + 1} starting. Epsilon: {agent.epsilon:.3f}") 
+        
         done = False
         while not done:
 
@@ -98,9 +100,11 @@ def train():
             torch.save(agent.model.state_dict(), model_path)
 
             # save epsilon value as meta data
-            with open(os.path.join("models", f"meta_{timestamp}.json"), "w") as f:
+            meta_path = os.path.join("models", f"meta_{timestamp}.json")
+            with open(meta_path, "w") as f:
                 json.dump({"epsilon": agent.epsilon}, f)
-            print(f"Model and epsilon saved to {model_path}")
+                
+            print(f"Model and epsilon saved: {model_path}")
 
 if __name__ == "__main__":
     train()
