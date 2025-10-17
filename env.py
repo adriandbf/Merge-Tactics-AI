@@ -3,6 +3,8 @@ from detections import Detection
 import numpy as np
 import time
 import os
+import pytesseract
+from PIL import Image
 
 # to do: refactor-statesize in constant
 
@@ -15,6 +17,13 @@ class MergeTacticsEnv:
         self.done = False
         self.actor = Actions()
         self.detector = Detection()
+        self.health_self = 12
+        self.health_p1 = 12
+        self.health_p2 = 12
+        self.health_p3 = 12
+
+        # configure pytesseract to not look for whole strings but only for digits
+        self.custom_config = r'--oem 3 --psm 6 outputbase digits'
 
         self.screenshots_dir = os.path.join(os.getcwd(), "screenshots")
         os.makedirs(self.screenshots_dir, exist_ok=True)
@@ -76,5 +85,41 @@ class MergeTacticsEnv:
         return np.array(obs[:self.state_size], dtype=np.int32)
 
     def _compute_reward(self, old_state, new_state):
+        # improvement: add error functions if int detection didn't work
+        # improvement ideas: detect player we are actually playing and only take his loss of health
+        # problem: changes may need time, so probably we are also just seeing the outcome of earlier 
+        # actions and not from tej current one
+
+        # weight between 0 and 1 that determines how much emphasize the reward function gives to defending 
+        # the own health in comparison to brining the health of the other charakters down
+        # 0.5 -> both are treatet as equaly important
+        # 1 -> only defending the own health is important 
+        # 0 -> only brining the health of the other charakters down is important 
+        weight = 0.5
+
+        self.actor.capture_healthbars()
+
+        health_self_img = Image.open("screenshots/health_self.png")
+        health_pl_img = Image.open("screenshots/health_p1.png")
+        health_p2_img = Image.open("screenshots/health_p2.png")
+        health_p3_img = Image.open("screenshots/health_p3.png")
+
+        new_health_self = int(pytesseract.image_to_string(health_self_img, config=self.custom_config))
+        new_health_p1 = int(pytesseract.image_to_string(health_pl_img, config=self.custom_config))
+        new_health_p2 = int(pytesseract.image_to_string(health_p2_img, config=self.custom_config))
+        new_health_p3 = int(pytesseract.image_to_string(health_p3_img, config=self.custom_config))
+
+        # losing parts of the own health is giving negativ reward while all losses of enemies health 
+        # give positive reward (including all players, not only the one we are currently playing)
+        reward = weight * (self.health_self - new_health_self) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+
+        # setting the new values as the health values as a base for the next step
+        self.health_self = new_health_self
+        self.health_p1 = new_health_p1
+        self.health_p2 = new_health_p2
+        self.health_p3 = new_health_p3
+
         # Simple placeholder: +1 if any troop or card class changes
-        return 1 if not np.array_equal(old_state, new_state) else 0
+        # return 1 if not np.array_equal(old_state, new_state) else 0
+
+        return reward

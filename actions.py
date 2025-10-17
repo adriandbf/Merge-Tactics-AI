@@ -26,6 +26,15 @@ class Actions:
             self.CARD_BAR_HEIGHT = 956 - 856
             self.card_width = self.CARD_BAR_WIDTH/3
 
+            # to do: insert actual values, this are only placeholders
+            self.HEALTH_WIDTH = 1
+            self.HEALTH_HEIGHT = 1
+            self.HEALTH_Y = 1
+            self.HEALTH_X_SELF = 1
+            self.HEALTH_X_P1 = 1
+            self.HEALTH_X_P2 = 1
+            self.HEALTH_X_P3 = 1
+
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1454
             self.TOP_LEFT_Y = 362
@@ -41,6 +50,15 @@ class Actions:
             self.CARD_BAR_WIDTH = 1708 - 1458
             self.CARD_BAR_HEIGHT = 926 - 828
             self.card_width = self.CARD_BAR_WIDTH/3
+
+            # to do: insert actual values, this are only placeholders
+            self.HEALTH_WIDTH = 1
+            self.HEALTH_HEIGHT = 1
+            self.HEALTH_Y = 1
+            self.HEALTH_X_SELF = 1
+            self.HEALTH_X_P1 = 1
+            self.HEALTH_X_P2 = 1
+            self.HEALTH_X_P3 = 1
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
@@ -105,6 +123,28 @@ class Actions:
             self.REPLAY_BUTTON_Y = 904
 
         pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
+
+    def capture_healthbars(self):
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "health_self.png")
+        screenshot = pyautogui.screenshot(region=(self.HEALTH_X_SELF, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
+        screenshot.save(save_path)
+
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "health_p1.png")
+        screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P1, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
+        screenshot.save(save_path)
+
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "health_p2.png")
+        screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P2, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
+        screenshot.save(save_path)
+
+        if save_path is None:
+            save_path = os.path.join(self.script_dir, "screenshots", "health_p3.png")
+        screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P3, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
+        screenshot.save(save_path)
+
 
 
 # testing screen capture functions
