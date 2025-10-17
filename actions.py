@@ -125,23 +125,20 @@ class Actions:
         pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
 
     def capture_healthbars(self):
-        if save_path is None:
-            save_path = os.path.join(self.script_dir, "screenshots", "health_self.png")
+        
+        save_path = os.path.join(self.script_dir, "screenshots", "health_self.png")
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_SELF, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
-
-        if save_path is None:
-            save_path = os.path.join(self.script_dir, "screenshots", "health_p1.png")
+        
+        save_path = os.path.join(self.script_dir, "screenshots", "health_p1.png")
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P1, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
 
-        if save_path is None:
-            save_path = os.path.join(self.script_dir, "screenshots", "health_p2.png")
+        save_path = os.path.join(self.script_dir, "screenshots", "health_p2.png")
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P2, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
 
-        if save_path is None:
-            save_path = os.path.join(self.script_dir, "screenshots", "health_p3.png")
+        save_path = os.path.join(self.script_dir, "screenshots", "health_p3.png")
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P3, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
 
