@@ -52,13 +52,13 @@ class Actions:
             self.card_width = self.CARD_BAR_WIDTH/3
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTH_WIDTH = 1
-            self.HEALTH_HEIGHT = 1
-            self.HEALTH_Y = 1
-            self.HEALTH_X_SELF = 1
-            self.HEALTH_X_P1 = 1
-            self.HEALTH_X_P2 = 1
-            self.HEALTH_X_P3 = 1
+            self.HEALTH_WIDTH = 16
+            self.HEALTH_HEIGHT = 13
+            self.HEALTH_Y = 113
+            self.HEALTH_X_SELF = 1475
+            self.HEALTH_X_P1 = 1602
+            self.HEALTH_X_P2 = 1730
+            self.HEALTH_X_P3 = 1856
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
@@ -153,6 +153,7 @@ def main():
     a.capture_area(os.path.join(folder, "area.png"))
     a.capture_card_area(os.path.join(folder, "card_area.png"))
     a.select_card(1)
+    a.capture_healthbars()
 
 if __name__ == "__main__":
     main()

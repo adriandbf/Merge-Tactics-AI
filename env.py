@@ -123,3 +123,16 @@ class MergeTacticsEnv:
         # return 1 if not np.array_equal(old_state, new_state) else 0
 
         return reward
+    
+# testing screen capture functions
+def main():
+
+    m = MergeTacticsEnv()
+    health_self_img = Image.open("screenshots/health_self.png")
+    new_health_self = pytesseract.image_to_string(health_self_img, config=m.custom_config)
+    print(new_health_self)
+    
+
+
+if __name__ == "__main__":
+    main()
