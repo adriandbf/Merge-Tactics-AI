@@ -3,8 +3,8 @@ from detections import Detection
 import numpy as np
 import time
 import os
-import pytesseract
-from PIL import Image
+import easyocr
+from PIL import Image, ImageOps
 
 # to do: refactor-statesize in constant
 
@@ -17,13 +17,11 @@ class MergeTacticsEnv:
         self.done = False
         self.actor = Actions()
         self.detector = Detection()
-        self.health_self = 12
         self.health_p1 = 12
         self.health_p2 = 12
         self.health_p3 = 12
-
-        # configure pytesseract to not look for whole strings but only for digits
-        self.custom_config = r'--oem 3 --psm 6 outputbase digits'
+        self.health_p4 = 12
+        self.reader = easyocr.Reader(['en'], gpu=False)
 
         self.screenshots_dir = os.path.join(os.getcwd(), "screenshots")
         os.makedirs(self.screenshots_dir, exist_ok=True)
@@ -97,41 +95,67 @@ class MergeTacticsEnv:
         # 0 -> only brining the health of the other charakters down is important 
         weight = 0.5
 
+        # default value if healthe couldn't be detected
+        health_default = 6
+
         self.actor.capture_healthbars()
 
-        health_self_img = Image.open("screenshots/health_self.png")
-        health_pl_img = Image.open("screenshots/health_p1.png")
-        health_p2_img = Image.open("screenshots/health_p2.png")
-        health_p3_img = Image.open("screenshots/health_p3.png")
+        new_health_p1 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
+        new_health_p2 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
+        new_health_p3 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
+        new_health_p4 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
 
-        new_health_self = int(pytesseract.image_to_string(health_self_img, config=self.custom_config))
-        new_health_p1 = int(pytesseract.image_to_string(health_pl_img, config=self.custom_config))
-        new_health_p2 = int(pytesseract.image_to_string(health_p2_img, config=self.custom_config))
-        new_health_p3 = int(pytesseract.image_to_string(health_p3_img, config=self.custom_config))
+        print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
 
+        # to do: adjust, now assuming p4 is self
         # losing parts of the own health is giving negativ reward while all losses of enemies health 
         # give positive reward (including all players, not only the one we are currently playing)
-        reward = weight * (self.health_self - new_health_self) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        reward = weight * (self.health_p4 - new_health_p4) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        print(f"Reward: {reward}")
 
         # setting the new values as the health values as a base for the next step
-        self.health_self = new_health_self
         self.health_p1 = new_health_p1
         self.health_p2 = new_health_p2
         self.health_p3 = new_health_p3
+        self.health_p4 = new_health_p4
 
         # Simple placeholder: +1 if any troop or card class changes
         # return 1 if not np.array_equal(old_state, new_state) else 0
 
         return reward
     
+
+    def extract_health_from_image(self, file_path, default_health):
+        try:
+            img = Image.open(file_path)
+            img = ImageOps.invert(img.convert('RGB'))
+            img = img.resize((img.width * 2, img.height * 2))
+            img_np = np.array(img)
+            results = self.reader.readtext(img_np)
+            print(results)
+
+            if results:
+                _, text, _ = results[0]
+                clean_text = text.strip()
+                number = int(clean_text)
+                if 0 <= number <= 12:
+                    return number
+                else:
+                    return default_health
+            else:
+                return default_health
+        except Exception:
+            return default_health
+    
 # testing screen capture functions
 def main():
 
     m = MergeTacticsEnv()
-    health_self_img = Image.open("screenshots/health_self.png")
-    new_health_self = pytesseract.image_to_string(health_self_img, config=m.custom_config)
-    print(new_health_self)
-    
+
+    old_state = np.array([5, 10, 10])
+    new_state = np.array([7, 9, 11])
+
+    m._compute_reward(old_state, new_state)
 
 
 if __name__ == "__main__":

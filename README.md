@@ -8,13 +8,12 @@ An AI agent that interacts with the merge tactics environment to play games.
 - Python
 - Pytorch
 - Windows/Darwin
-- Tesseract
+- EasyOCR
 
 # Implementing decisions
 - DQN
 
 # Credits/ Used sources as a base for coding
 - https://github.com/krazyness/CRBot-public/blob/main/dqn_agent.py
-- https://github.com/tesseract-ocr/tesseract
 
 # How to run this project
