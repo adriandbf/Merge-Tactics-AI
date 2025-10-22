@@ -44,35 +44,35 @@ class Actions:
             self.HEALTH_X_P4 = 1
 
         elif self.os_type == "Windows":
-            self.TOP_LEFT_X = 1454
-            self.TOP_LEFT_Y = 362
-            self.BOTTOM_RIGHT_X = 1804
-            self.BOTTOM_RIGHT_Y = 745
+            self.TOP_LEFT_X = 1476
+            self.TOP_LEFT_Y = 366
+            self.BOTTOM_RIGHT_X = 1796
+            self.BOTTOM_RIGHT_Y = 717
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
-            self.CARD_BAR_X = 1458
-            self.CARD_BAR_Y = 828
-            self.CARD_BAR_WIDTH = 1708 - 1458
-            self.CARD_BAR_HEIGHT = 926 - 828
+            self.CARD_BAR_X = 1476
+            self.CARD_BAR_Y = 807
+            self.CARD_BAR_WIDTH = 1707 - 1476
+            self.CARD_BAR_HEIGHT = 902 - 807
             self.card_width = self.CARD_BAR_WIDTH/3
 
             # to do: insert actual values, this are only placeholders
-            self.ELIXIR_X = 1
-            self.ELIXIR_Y = 1
-            self.ELIXIR_WIDTH = 1
-            self.ELIXIR_HEIGHT = 1
+            self.ELIXIR_X = 1728
+            self.ELIXIR_Y = 854
+            self.ELIXIR_WIDTH = 1769 - 1728
+            self.ELIXIR_HEIGHT = 896-854
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTH_WIDTH = 15
-            self.HEALTH_HEIGHT = 13
-            self.HEALTH_Y = 113
-            self.HEALTH_X_P1 = 1477
-            self.HEALTH_X_P2 = 1604
-            self.HEALTH_X_P3 = 1730
-            self.HEALTH_X_P4 = 1856
+            self.HEALTH_WIDTH = 12
+            self.HEALTH_HEIGHT = 11
+            self.HEALTH_Y = 112
+            self.HEALTH_X_P1 = 1492
+            self.HEALTH_X_P2 = 1615
+            self.HEALTH_X_P3 = 1737
+            self.HEALTH_X_P4 = 1860
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
