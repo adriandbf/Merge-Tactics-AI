@@ -108,22 +108,23 @@ class MergeTacticsEnv:
         return np.array(obs[:self.state_size], dtype=np.int32)
 
     def _compute_reward(self, old_state, new_state):
-        # improvement: add error functions if int detection didn't work
+        # improvement: add error functions and default_values if int detection didn't work
         # improvement ideas: detect player we are actually playing and only take his loss of health
         # problem: changes may need time, so probably we are also just seeing the outcome of earlier 
         # actions and not from tej current one
 
         # weight between 0 and 1 that determines how much emphasize the reward function gives to defending 
-        # the own health in comparison to brining the health of the other charakters down
+        # the own health in comparison to brining the health of the other characters down
         # 0.5 -> both are treatet as equaly important
         # 1 -> only defending the own health is important 
         # 0 -> only brining the health of the other charakters down is important 
-        weight = 0.5
+        weight = 1
 
         # default value if healthe couldn't be detected
         health_default = 6
 
         self.actor.capture_healthbars()
+        self_position = self.actor.get_current_player_position()
 
         new_health_p1 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
         new_health_p2 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
@@ -131,11 +132,18 @@ class MergeTacticsEnv:
         new_health_p4 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
 
         print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
-
-        # to do: adjust, now assuming p4 is self
+        
         # losing parts of the own health is giving negativ reward while all losses of enemies health 
         # give positive reward (including all players, not only the one we are currently playing)
-        reward = weight * (self.health_p4 - new_health_p4) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        if self_position == 1:
+            reward = weight * (self.health_p1 - new_health_p1) * (-1) + (1-weight) * (self.health_p4 - new_health_p4 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        elif self_position == 2:
+            reward = weight * (self.health_p2 - new_health_p2) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p4 - new_health_p4 + self.health_p3 - new_health_p3)
+        elif self_position == 3:
+            reward = weight * (self.health_p3 - new_health_p3) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p4 - new_health_p4)
+        elif self_position == 4:
+            reward = weight * (self.health_p4 - new_health_p4) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        
         print(f"Reward: {reward}")
 
         # setting the new values as the health values as a base for the next step
@@ -177,10 +185,12 @@ def main():
 
     m = MergeTacticsEnv()
 
-    old_state = np.array([5, 10, 10])
-    new_state = np.array([7, 9, 11])
+    m.extract_health_from_image("screenshots/health_p4.png", 3)
 
-    m._compute_reward(old_state, new_state)
+    # old_state = np.array([5, 10, 10])
+    # new_state = np.array([7, 9, 11])
+
+    # m._compute_reward(old_state, new_state)
 
 
 if __name__ == "__main__":

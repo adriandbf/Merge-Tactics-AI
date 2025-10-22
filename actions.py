@@ -43,6 +43,13 @@ class Actions:
             self.HEALTH_X_P3 = 1
             self.HEALTH_X_P4 = 1
 
+            # to do: insert actual values, this are only placeholders
+            self.HEALTHBAR_Y = 1
+            self.HEALTHBAR_X_P1 = 1
+            self.HEALTHBAR_X_P2 = 1
+            self.HEALTHBAR_X_P3 = 1
+            self.HEALTHBAR_X_P4 = 1
+
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1476
             self.TOP_LEFT_Y = 366
@@ -59,13 +66,11 @@ class Actions:
             self.CARD_BAR_HEIGHT = 902 - 807
             self.card_width = self.CARD_BAR_WIDTH/3
 
-            # to do: insert actual values, this are only placeholders
             self.ELIXIR_X = 1728
             self.ELIXIR_Y = 854
             self.ELIXIR_WIDTH = 1769 - 1728
             self.ELIXIR_HEIGHT = 896-854
 
-            # to do: insert actual values, this are only placeholders
             self.HEALTH_WIDTH = 12
             self.HEALTH_HEIGHT = 11
             self.HEALTH_Y = 112
@@ -73,6 +78,12 @@ class Actions:
             self.HEALTH_X_P2 = 1615
             self.HEALTH_X_P3 = 1737
             self.HEALTH_X_P4 = 1860
+
+            self.HEALTHBAR_Y = 121
+            self.HEALTHBAR_X_P1 = 1385
+            self.HEALTHBAR_X_P2 = 1508
+            self.HEALTHBAR_X_P3 = 1630
+            self.HEALTHBAR_X_P4 = 1754
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
@@ -216,6 +227,30 @@ class Actions:
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P4, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
 
+    def get_current_player_position(self):
+        # returns a value between 1 and 4 to indicate our position in the healthbars, or default_position if detection didn't work
+        # red healthbar color values: (237, 101, 101)
+        # blue healthbar color values: (151, 209, 234)
+        self.default_position = 1
+
+        colour1 = pyautogui.pixel(self.HEALTHBAR_X_P1, self.HEALTHBAR_Y)
+        colour2 = pyautogui.pixel(self.HEALTHBAR_X_P2, self.HEALTHBAR_Y)
+        colour3 = pyautogui.pixel(self.HEALTHBAR_X_P3, self.HEALTHBAR_Y)
+        colour4 = pyautogui.pixel(self.HEALTHBAR_X_P4, self.HEALTHBAR_Y)
+
+        if colour1 == (151, 209, 234):
+            return 1
+        elif colour2 == (151, 209, 234):
+            return 2
+        elif colour3 == (151, 209, 234):
+            return 3
+        elif colour4 == (151, 209, 234):
+            return 4
+        else:
+            return self.default_position
+
+
+        
 
 
 # testing screen capture functions
@@ -228,6 +263,7 @@ def main():
     a.capture_card_area(os.path.join(folder, "card_area.png"))
     a.select_card(1)
     a.capture_healthbars()
+    a.get_current_player_position()
 
 if __name__ == "__main__":
     main()
