@@ -1,8 +1,11 @@
 import pyautogui
+import cv2
 import os
+import numpy as np
 from datetime import datetime
 import time
 import platform
+import easyocr
 
 class Actions:
     def __init__(self):
@@ -25,6 +28,11 @@ class Actions:
             self.CARD_BAR_WIDTH = 1312 - 1058
             self.CARD_BAR_HEIGHT = 956 - 856
             self.card_width = self.CARD_BAR_WIDTH/3
+
+            self.ELIXIR_X = 1322
+            self.ELIXIR_Y = 900
+            self.ELIXIR_WIDTH = 1381 - 1322
+            self.ELIXIR_HEIGHT = 961 - 900
 
             # to do: insert actual values, this are only placeholders
             self.HEALTH_WIDTH = 1
@@ -50,6 +58,12 @@ class Actions:
             self.CARD_BAR_WIDTH = 1708 - 1458
             self.CARD_BAR_HEIGHT = 926 - 828
             self.card_width = self.CARD_BAR_WIDTH/3
+
+            # to do: insert actual values, this are only placeholders
+            self.ELIXIR_X = 1
+            self.ELIXIR_Y = 1
+            self.ELIXIR_WIDTH = 1
+            self.ELIXIR_HEIGHT = 1
 
             # to do: insert actual values, this are only placeholders
             self.HEALTH_WIDTH = 15
@@ -103,10 +117,70 @@ class Actions:
             cards.append(save_path)
 
         return cards
-    
+
+    # TODO: fix windows
     def count_elixir(self):
-        #TODO
-        pass
+        """Detect current elixir count using template or pixel-based detection depending on OS."""
+        try:
+            if self.os_type == "Darwin":
+                # macOS: template image matching
+                region = (
+                self.ELIXIR_X,
+                self.ELIXIR_Y,
+                self.ELIXIR_WIDTH,
+                self.ELIXIR_HEIGHT
+                )
+                for i in range(0, 5, 1):  # check higher elixir values first
+                    image_file = os.path.join(self.images_folder, f"{i}elixir.png")
+                    if not os.path.exists(image_file):
+                        continue  # skip if missing
+
+                    try:
+                        location = pyautogui.locateOnScreen(
+                            image_file,
+                            confidence=0.5,
+                            grayscale=True,
+                            #region=region
+                        )
+                        if location:
+                            print(f"[DEBUG] Elixir image matched: {i} ({image_file})")
+                            return i
+                    except Exception as e:
+                        pass
+                        #print(f"[ERROR] locateOnScreen failed for {image_file}: {e}") # for debugging
+
+                print("[WARN] No elixir image matched — assuming 5")
+                return 5
+
+            elif self.os_type == "Windows":
+                # Windows: count purple bars by pixel color sampling
+                target_color = (225, 128, 229)
+                tolerance = 80
+                count = 0
+
+                # The x-range and y position should match where bars appear in your resolution
+                for x in range(1512, 1892, 38):  # adjust spacing if needed
+                    try:
+                        r, g, b = pyautogui.pixel(x, 989)
+                        if (
+                            abs(r - target_color[0]) <= tolerance and
+                            abs(g - target_color[1]) <= tolerance and
+                            abs(b - target_color[2]) <= tolerance
+                        ):
+                            count += 1
+                    except Exception as e:
+                        print(f"[WARN] pixel read failed at x={x}: {e}")
+
+                print(f"[DEBUG] Elixir detected (Windows): {count}")
+                return min(count, 5)
+
+            else:
+                print("[WARN] Unsupported OS type — returning 0")
+                return 0
+
+        except Exception as e:
+            print(f"[ERROR] Elixir detection failed: {e}")
+            return 0
 
     def select_card(self,action_nr):
         # assume action_nr between 0 and 2

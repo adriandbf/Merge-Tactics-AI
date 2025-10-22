@@ -1,5 +1,6 @@
 from actions import Actions
 from detections import Detection
+from card_data import CARD_COSTS
 import numpy as np
 import time
 import os
@@ -57,18 +58,41 @@ class MergeTacticsEnv:
     # a function that performs a given action in the actual game and returns the next_state, reward, done-flag
     # TO DO: implement done flag
     def step(self, action_index):
-        # Check if match ended TODO
+        """
+        Perform one step in the environment.
+        Uses card names (string classes) instead of numeric IDs.
+        """
 
-        # assume action_index from 0 to 2
-        self.actor.select_card(action_index)
-        self.actor.capture_area()
-        self.actor.capture_card_area()
+        # Get current elixir count
+        elixir = self.actor.count_elixir()
 
+        # Update screen and get new observation
+        self.actor.capture_area(os.path.join("screenshots", "area.png"))
+        self.actor.capture_card_area(os.path.join("screenshots", "card_area.png"))
         next_state = self._get_observation()
-        reward = self._compute_reward(self.state, next_state)
+
+        # Extract the card names (strings)
+        card_classes = list(next_state[:3])  # first 3 elements = card names
+        chosen_card_name = card_classes[action_index]
+
+        # Get cost from dictionary (default = 5 if unknown)
+        card_cost = CARD_COSTS.get(chosen_card_name, 5)
+
+        # Check affordability
+        if elixir >= card_cost:
+            print(f"[ACTION] Playing {chosen_card_name} (cost {card_cost}), elixir {elixir}")
+            self.actor.select_card(action_index)
+            reward = 1.0
+        else:
+            print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
+            reward = -0.5
+
+        # Update state
         self.state = next_state
 
+        # Return transition
         return next_state, reward, self.done
+
     
     def _get_observation(self):
         # detect troops + cards
@@ -76,6 +100,7 @@ class MergeTacticsEnv:
         cards = [self.detector.detect_card(i) for i in range(3)]
         troop_classes = [t['class_id'] for t in troops]
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
+        print(card_classes)
 
         obs = card_classes + troop_classes
         if len(obs) < self.state_size:
