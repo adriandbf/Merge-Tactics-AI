@@ -50,6 +50,12 @@ class Actions:
             self.HEALTHBAR_X_P3 = 1
             self.HEALTHBAR_X_P4 = 1
 
+            # to do: insert actual values, this are only placeholders
+            # a pixel with a colour that it only has when a game is done
+            self.IS_DONE_X = 1
+            self.IS_DONE_y = 1
+            self.IS_DONE_COLOUR = (1,1,1)
+
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1476
             self.TOP_LEFT_Y = 366
@@ -84,6 +90,11 @@ class Actions:
             self.HEALTHBAR_X_P2 = 1508
             self.HEALTHBAR_X_P3 = 1630
             self.HEALTHBAR_X_P4 = 1754
+
+            # a pixel with a colour that it only has when a game is done
+            self.IS_DONE_X = 1414
+            self.IS_DONE_y = 189
+            self.IS_DONE_COLOUR = (22,22,15)
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
@@ -248,6 +259,13 @@ class Actions:
             return 4
         else:
             return self.default_position
+        
+    def detect_is_done(self):
+        color = pyautogui.pixel(self.IS_DONE_X, self.IS_DONE_y)
+        if color == self.IS_DONE_COLOUR:
+            return True
+        else:
+            return False
 
 
         

@@ -87,11 +87,20 @@ class MergeTacticsEnv:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
             reward = -0.5
 
+        # get reward
+        reward += self._compute_reward(self.state, next_state)
+
         # Update state
         self.state = next_state
 
+        # check if game is over now
+        is_done = self.actor.detect_is_done()
+        if is_done == True:
+            
+            return next_state, reward,True
+
         # Return transition
-        return next_state, reward, self.done
+        return next_state, reward, False
 
     
     def _get_observation(self):
@@ -132,7 +141,7 @@ class MergeTacticsEnv:
         new_health_p4 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
 
         print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
-        
+
         # losing parts of the own health is giving negativ reward while all losses of enemies health 
         # give positive reward (including all players, not only the one we are currently playing)
         if self_position == 1:
