@@ -66,16 +66,15 @@ class MergeTacticsEnv:
         Perform one step in the environment.
         """
 
-        # Get current elixir count
-        elixir = self.actor.count_elixir()
-
         # Update screen and get new observation
         self.actor.capture_area(os.path.join("screenshots", "area.png"))
         self.actor.capture_card_area(os.path.join("screenshots", "card_area.png"))
         next_state = self._get_observation()
 
-        # Extract the card names (strings)
+        # Extract the card names and elixir
         card_classes = list(next_state[:3])  # first 3 elements = card names
+        elixir = next_state[3] # 4th element is elixir
+
         chosen_card_name = card_classes[action_index]
         print(card_classes)
         print(action_index)
@@ -88,10 +87,8 @@ class MergeTacticsEnv:
         if elixir >= card_cost:
             print(f"[ACTION] Playing {chosen_card_name} (cost {card_cost}), elixir {elixir}")
             self.actor.select_card(action_index)
-            # reward = 1.0
         else:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
-            # reward = -0.5
 
         # get reward
         reward = self._compute_reward(self.state, next_state)
@@ -102,7 +99,6 @@ class MergeTacticsEnv:
         # check if game is over now
         is_done = self.actor.detect_is_done()
         if is_done == True:
-            
             return next_state, reward,True
 
         # Return transition
@@ -117,9 +113,15 @@ class MergeTacticsEnv:
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
         # print(card_classes) #testing
 
-        obs = card_classes +  troop_classes
+        elixir = self.actor.count_elixir()
+
+        # State vector with cards, elixir, and troops
+        obs = card_classes + [elixir] + troop_classes
+
+        # padding the state vector to the right size (22)
         if len(obs) < self.state_size:
             obs += [0] * (self.state_size - len(obs))
+
         return np.array(obs[:self.state_size], dtype=np.int32)
 
     def _compute_reward(self, old_state, new_state):

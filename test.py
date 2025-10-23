@@ -110,49 +110,49 @@ for step in range(1):
 # # if __name__ == "__main__":
 # #     main()
 
-# # import cv2
-# # import numpy as np
-# # import os
-# # from PIL import ImageGrab
-# # from actions import Actions
+# import cv2
+# import numpy as np
+# import os
+# from PIL import ImageGrab
+# from actions import Actions
 
-# # def main():
-# #     a = Actions()
+# def main():
+#     a = Actions()
 
-# #     region = (
-# #         a.ELIXIR_X,
-# #         a.ELIXIR_Y,
-# #         a.ELIXIR_X + a.ELIXIR_WIDTH,
-# #         a.ELIXIR_Y + a.ELIXIR_HEIGHT
-# #     )
+#     region = (
+#         a.ELIXIR_X,
+#         a.ELIXIR_Y,
+#         a.ELIXIR_X + a.ELIXIR_WIDTH,
+#         a.ELIXIR_Y + a.ELIXIR_HEIGHT
+#     )
 
-# #     # Capture the region currently used by count_elixir()
-# #     screenshot = ImageGrab.grab(bbox=region)
-# #     screen_rgb = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+#     # Capture the region currently used by count_elixir()
+#     screenshot = ImageGrab.grab(bbox=region)
+#     screen_rgb = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
-# #     # Save the raw capture for manual comparison
-# #     cv2.imwrite("screenshots/elixir_live_view.png", screen_rgb)
-# #     print("[INFO] Saved current elixir bar as screenshots/elixir_live_view.png")
+#     # Save the raw capture for manual comparison
+#     cv2.imwrite("screenshots/elixir_live_view.png", screen_rgb)
+#     print("[INFO] Saved current elixir bar as screenshots/elixir_live_view.png")
 
-# #     # Compare with each template
-# #     images_folder = a.images_folder
-# #     for i in range(6):
-# #         template_path = os.path.join(images_folder, f"{i}elixir.png")
-# #         if not os.path.exists(template_path):
-# #             print(f"[WARN] Missing template: {template_path}")
-# #             continue
+#     # Compare with each template
+#     images_folder = a.images_folder
+#     for i in range(6):
+#         template_path = os.path.join(images_folder, f"{i}elixir.png")
+#         if not os.path.exists(template_path):
+#             print(f"[WARN] Missing template: {template_path}")
+#             continue
 
-# #         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
-# #         res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
+#         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+#         res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
 
-# #         _, max_val, _, _ = cv2.minMaxLoc(res)
-# #         print(f"[DEBUG] Match for {i}elixir.png → confidence={max_val:.3f}")
+#         _, max_val, _, _ = cv2.minMaxLoc(res)
+#         print(f"[DEBUG] Match for {i}elixir.png → confidence={max_val:.3f}")
 
-# #     print("\n✅ Open screenshots/elixir_live_view.png and one of your templates side by side.")
-# #     print("They MUST be identical in scale, brightness, and color tone for template matching to work.")
+#     print("\n✅ Open screenshots/elixir_live_view.png and one of your templates side by side.")
+#     print("They MUST be identical in scale, brightness, and color tone for template matching to work.")
 
-# # if __name__ == "__main__":
-# #     main()
+# if __name__ == "__main__":
+#     main()
 
 # Tests workflows from roboflow
 # from inference_sdk import InferenceHTTPClient
