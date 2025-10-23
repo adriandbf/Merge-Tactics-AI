@@ -64,6 +64,17 @@ def train():
     episodes = 10000
     batch_size = 32
 
+    # data tracking
+    metrics_path = os.path.join("models", "training_metrics.json")
+    if os.path.exists(metrics_path):
+        try:
+            with open(metrics_path, "r") as f:
+                metrics = json.load(f)
+        except Exception:
+            metrics = []
+    else:
+        metrics = []
+
     for ep in range(episodes):
         if controller.is_exit_requested():
             print("Training interrupted by user.")
@@ -89,6 +100,14 @@ def train():
             total_reward += reward
         print(f"Episode {ep + 1}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}")
 
+        # appending the data
+        metrics.append({
+            "episode": ep + 1,
+            "total_reward": total_reward,
+            "epsilon": round(agent.epsilon, 4),
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+
         # Save model and epsilon every 10 episodes
         if ep % 10 == 0:
             # update the values in the target model with those from the model we are training on
@@ -103,6 +122,10 @@ def train():
             meta_path = os.path.join("models", f"meta_{timestamp}.json")
             with open(meta_path, "w") as f:
                 json.dump({"epsilon": agent.epsilon}, f)
+
+            # saving metrics
+            with open(metrics_path, "w") as f:
+                json.dump(metrics, f, indent=4)
                 
             print(f"Model and epsilon saved: {model_path}")
 
