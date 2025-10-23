@@ -14,7 +14,7 @@ class MergeTacticsEnv:
     def __init__(self):
         # maximal state_size -3 troops in the arena can be included in the calculations
         self.os_type = platform.system()
-        self.state_size = 20         
+        self.state_size = 22         
         self.action_size = 3         
         self.state = np.zeros(self.state_size, dtype=np.int32)  
         self.done = False
@@ -86,10 +86,10 @@ class MergeTacticsEnv:
         if elixir >= card_cost:
             print(f"[ACTION] Playing {chosen_card_name} (cost {card_cost}), elixir {elixir}")
             self.actor.select_card(action_index)
-            reward = 1.0
+            # reward = 1.0
         else:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
-            reward = -0.5
+            # reward = -0.5
 
         # get reward
         reward += self._compute_reward(self.state, next_state)
@@ -115,7 +115,7 @@ class MergeTacticsEnv:
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
         # print(card_classes) #testing
 
-        obs = card_classes + troop_classes
+        obs = card_classes +  troop_classes
         if len(obs) < self.state_size:
             obs += [0] * (self.state_size - len(obs))
         return np.array(obs[:self.state_size], dtype=np.int32)
