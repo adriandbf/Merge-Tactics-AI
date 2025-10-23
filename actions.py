@@ -36,13 +36,13 @@ class Actions:
             self.ELIXIR_HEIGHT = 961 - 900
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTH_WIDTH = 1097 - 1084
-            self.HEALTH_HEIGHT = 149 - 139
-            self.HEALTH_Y = 139
-            self.HEALTH_X_P1 = 1084
-            self.HEALTH_X_P2 = 1211
-            self.HEALTH_X_P3 = 1340
-            self.HEALTH_X_P4 = 1466
+            self.HEALTH_WIDTH = 1096 - 1083
+            self.HEALTH_HEIGHT = 147 - 137
+            self.HEALTH_Y = 137
+            self.HEALTH_X_P1 = 1083
+            self.HEALTH_X_P2 = 1210
+            self.HEALTH_X_P3 = 1339
+            self.HEALTH_X_P4 = 1467
 
             # to do: insert actual values, this are only placeholders
             self.HEALTHBAR_Y = 144
@@ -173,7 +173,7 @@ class Actions:
                     res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
                     _, max_val, _, _ = cv2.minMaxLoc(res)
 
-                    if max_val > 0.9 and max_val > best_match_val:
+                    if max_val > 0.7 and max_val > best_match_val:
                         best_match_val = max_val
                         best_elixir = i
                 if best_elixir is not None:

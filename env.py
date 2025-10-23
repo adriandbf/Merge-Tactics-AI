@@ -5,6 +5,7 @@ import numpy as np
 import time
 import os
 import easyocr
+import platform
 from PIL import Image, ImageOps
 
 # to do: refactor-statesize in constant
@@ -12,6 +13,7 @@ from PIL import Image, ImageOps
 class MergeTacticsEnv:
     def __init__(self):
         # maximal state_size -3 troops in the arena can be included in the calculations
+        self.os_type = platform.system()
         self.state_size = 20         
         self.action_size = 3         
         self.state = np.zeros(self.state_size, dtype=np.int32)  
@@ -78,7 +80,7 @@ class MergeTacticsEnv:
         print(chosen_card_name)
 
         # Get cost from dictionary (default = 5 if unknown)
-        card_cost = CARD_COSTS.get(chosen_card_name, 5)
+        card_cost = CARD_COSTS.get(chosen_card_name+1, 5)
 
         # Check affordability
         if elixir >= card_cost:
@@ -138,9 +140,9 @@ class MergeTacticsEnv:
         self_position = self.actor.get_current_player_position()
 
         new_health_p1 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
-        new_health_p2 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
-        new_health_p3 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
-        new_health_p4 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
+        new_health_p2 = self.extract_health_from_image("screenshots/health_p2.png", health_default)
+        new_health_p3 = self.extract_health_from_image("screenshots/health_p3.png", health_default)
+        new_health_p4 = self.extract_health_from_image("screenshots/health_p4.png", health_default)
 
         print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
 
@@ -172,7 +174,7 @@ class MergeTacticsEnv:
     def extract_health_from_image(self, file_path, default_health):
         if self.os_type == "Darwin":
             # to do: adjust scale_factor, this is just a placeholder
-            scale_factor = 5
+            scale_factor = 8
         elif self.os_type == "Windows":
             scale_factor = 5
 
