@@ -1,30 +1,42 @@
-# from env import MergeTacticsEnv
-# from agent import DQNAgent
-# import numpy as np
+from env import MergeTacticsEnv
+from agent import DQNAgent
+import numpy as np
 
-# env = MergeTacticsEnv()
-# agent = DQNAgent(env.state_size, env.action_size)
+agentType = "DQN" # PPO or DQN available
+selfDefensePriority = 1 # number between 0 and 1
+randomPlay = False # True or False
 
-# state = env.reset()
+env = MergeTacticsEnv()
+env.set_selfDefensePriority(selfDefensePriority)
+env.set_constant_reward(randomPlay)
+if agentType == "DQN":
+    agent = DQNAgent(env.state_size, env.action_size)
+elif agentType == "PPO":
+    # to do: implement PPO case
+    pass
+else: 
+    agent = DQNAgent(env.state_size, env.action_size)
 
-# for step in range(1):
-#     action = agent.act(state)
-#     next_state, reward, done = env.step(action)
-#     agent.remember(state, action, reward, next_state, done)
-#     print(f"Step {step+1}: action={action}, reward={reward}")
-#     state = next_state
+state = env.reset()
 
-import pyautogui
-import time
+for step in range(1):
+    action = agent.act(state)
+    next_state, reward, done = env.step(action)
+    agent.remember(state, action, reward, next_state, done)
+    print(f"Step {step+1}: action={action}, reward={reward}")
+    state = next_state
 
-time.sleep(5)
-x,y = pyautogui.position()
-print(x)
-print(y)
+# import pyautogui
+# import time
 
-# for mac the x and y need to be doubled - retina display makes it wonky
-color= pyautogui.pixel(2*x,2*y)
-print(color)
+# time.sleep(5)
+# x,y = pyautogui.position()
+# print(x)
+# print(y)
+
+# # for mac the x and y need to be doubled - retina display makes it wonky
+# color= pyautogui.pixel(2*x,2*y)
+# print(color)
 # from inference_sdk import InferenceHTTPClient
 
 # client = InferenceHTTPClient(

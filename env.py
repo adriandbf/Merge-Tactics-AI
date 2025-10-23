@@ -25,6 +25,8 @@ class MergeTacticsEnv:
         self.health_p3 = 12
         self.health_p4 = 12
         self.reader = easyocr.Reader(['en'], gpu=False)
+        self.selfDefensePriority = 1
+        self.constant_reward = False
 
         self.screenshots_dir = os.path.join(os.getcwd(), "screenshots")
         os.makedirs(self.screenshots_dir, exist_ok=True)
@@ -92,7 +94,7 @@ class MergeTacticsEnv:
             # reward = -0.5
 
         # get reward
-        reward += self._compute_reward(self.state, next_state)
+        reward = self._compute_reward(self.state, next_state)
 
         # Update state
         self.state = next_state
@@ -121,6 +123,9 @@ class MergeTacticsEnv:
         return np.array(obs[:self.state_size], dtype=np.int32)
 
     def _compute_reward(self, old_state, new_state):
+
+        if self.constant_reward == True:
+            return 0
         # improvement: add error functions and default_values if int detection didn't work
         # improvement ideas: detect player we are actually playing and only take his loss of health
         # problem: changes may need time, so probably we are also just seeing the outcome of earlier 
@@ -131,7 +136,7 @@ class MergeTacticsEnv:
         # 0.5 -> both are treatet as equaly important
         # 1 -> only defending the own health is important 
         # 0 -> only brining the health of the other charakters down is important 
-        weight = 1
+        weight = self.selfDefensePriority
 
         # default value if healthe couldn't be detected
         health_default = 6
@@ -170,6 +175,19 @@ class MergeTacticsEnv:
 
         return reward
     
+    # sets selfDefensePriority to the given value (number between 0 and 1)
+    # in value is invalid is will be set to 1 as default
+    def set_selfDefensePriority(self,selfDefensePriority):
+
+        if not isinstance(selfDefensePriority, (int, float)):
+            self.selfDefensePriority = 1
+        elif not (0 <= selfDefensePriority <= 1):
+            self.selfDefensePriority = 1 
+        else: 
+            self.selfDefensePriority = selfDefensePriority
+
+    def set_constant_reward(self, constant_reward):
+        self.constant_reward = constant_reward
 
     def extract_health_from_image(self, file_path, default_health):
         if self.os_type == "Darwin":
@@ -185,7 +203,6 @@ class MergeTacticsEnv:
             img = img.resize((img.width * scale_factor, img.height * scale_factor))
             img_np = np.array(img)
             results = self.reader.readtext(img_np)
-            print(results)
 
             if results:
                 _, text, _ = results[0]

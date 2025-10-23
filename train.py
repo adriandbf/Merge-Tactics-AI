@@ -39,10 +39,22 @@ def get_latest_model_path(models_dir="models"):
     model_files.sort()  # Lexicographical sort works for timestamps
     return model_files[-1]
 
-def train():
-    
+# accepted inputs for agentType:  DQN or PPO  (default for invalid values is DQN)
+# randomPlay is a flag if the agent should just play random or if it should actualy learn (sets a constant reward function)
+# selfDefensePriority is a value between 0 and 1 that indicates how much defending our own health is rewarded with respect to decreasing the health of the others
+def train(agentType, selfDefensePriority, randomPlay):
+
     env = MergeTacticsEnv()
-    agent = DQNAgent(env.state_size, env.action_size)
+    env.set_selfDefensePriority(selfDefensePriority)
+    env.set_constant_reward(randomPlay)
+
+    if agentType == "DQN":
+        agent = DQNAgent(env.state_size, env.action_size)
+    elif agentType == "PPO":
+        # to do: implement PPO case
+        pass
+    else: 
+        agent = DQNAgent(env.state_size, env.action_size)
 
     # Ensure models directory exists
     os.makedirs("models", exist_ok=True)
@@ -107,4 +119,13 @@ def train():
             print(f"Model and epsilon saved: {model_path}")
 
 if __name__ == "__main__":
-    train()
+    
+    agentType = input("Which agent would you like to train? (DQN / PPO) DQN will be trained if input invalid: ").strip().upper()
+
+    if agentType == "DQN":
+        train("DQN")
+    elif agentType == "PPO":
+        train("PPO")
+    else:
+        train("DQN")
+        
