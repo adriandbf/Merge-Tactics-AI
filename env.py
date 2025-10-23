@@ -89,7 +89,7 @@ class MergeTacticsEnv:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
 
         # get reward
-        reward += self._compute_reward(self.state, next_state)
+        reward = self._compute_reward(self.state, next_state)
 
         # Update state
         self.state = next_state
