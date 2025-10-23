@@ -1,5 +1,6 @@
 import pyautogui
 import cv2
+from PIL import ImageGrab
 import os
 import numpy as np
 from datetime import datetime
@@ -15,9 +16,9 @@ class Actions:
         
         if self.os_type == "Darwin":
             self.TOP_LEFT_X = 1036
-            self.TOP_LEFT_Y = 284
+            self.TOP_LEFT_Y = 334
             self.BOTTOM_RIGHT_X = 1442
-            self.BOTTOM_RIGHT_Y = 784
+            self.BOTTOM_RIGHT_Y = 834
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
@@ -35,26 +36,26 @@ class Actions:
             self.ELIXIR_HEIGHT = 961 - 900
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTH_WIDTH = 1
-            self.HEALTH_HEIGHT = 1
-            self.HEALTH_Y = 1
-            self.HEALTH_X_P1 = 1
-            self.HEALTH_X_P2 = 1
-            self.HEALTH_X_P3 = 1
-            self.HEALTH_X_P4 = 1
+            self.HEALTH_WIDTH = 1097 - 1084
+            self.HEALTH_HEIGHT = 149 - 139
+            self.HEALTH_Y = 139
+            self.HEALTH_X_P1 = 1084
+            self.HEALTH_X_P2 = 1211
+            self.HEALTH_X_P3 = 1340
+            self.HEALTH_X_P4 = 1466
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTHBAR_Y = 1
-            self.HEALTHBAR_X_P1 = 1
-            self.HEALTHBAR_X_P2 = 1
-            self.HEALTHBAR_X_P3 = 1
-            self.HEALTHBAR_X_P4 = 1
+            self.HEALTHBAR_Y = 144
+            self.HEALTHBAR_X_P1 = 969
+            self.HEALTHBAR_X_P2 = 1097
+            self.HEALTHBAR_X_P3 = 1225
+            self.HEALTHBAR_X_P4 = 1353
 
             # to do: insert actual values, this are only placeholders
             # a pixel with a colour that it only has when a game is done
-            self.IS_DONE_X = 1
-            self.IS_DONE_y = 1
-            self.IS_DONE_COLOUR = (1,1,1)
+            self.IS_DONE_X = 1006*2 # Multiplied by 2 for retina display
+            self.IS_DONE_y = 267*2
+            self.IS_DONE_COLOUR = (26,26,32)
 
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1476
@@ -142,67 +143,54 @@ class Actions:
 
     # TODO: fix windows
     def count_elixir(self):
-        """Detect current elixir count using template or pixel-based detection depending on OS."""
+        """Detect elixir"""
         try:
             if self.os_type == "Darwin":
                 # macOS: template image matching
                 region = (
-                self.ELIXIR_X,
-                self.ELIXIR_Y,
-                self.ELIXIR_WIDTH,
-                self.ELIXIR_HEIGHT
+                    self.ELIXIR_X,
+                    self.ELIXIR_Y,
+                    self.ELIXIR_WIDTH + self.ELIXIR_X,
+                    self.ELIXIR_HEIGHT + self.ELIXIR_Y
                 )
-                for i in range(0, 5, 1):  # check higher elixir values first
+
+                # Take region screenshot (high precision, retina-safe)
+                screenshot = ImageGrab.grab(bbox=region)
+                screen_rgb = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+
+                best_match_val = 0
+                best_elixir = None
+
+                for i in range(5, -1, -1):  # check higher elixir values first
                     image_file = os.path.join(self.images_folder, f"{i}elixir.png")
                     if not os.path.exists(image_file):
                         continue  # skip if missing
 
-                    try:
-                        location = pyautogui.locateOnScreen(
-                            image_file,
-                            confidence=0.5,
-                            grayscale=True,
-                            #region=region
-                        )
-                        if location:
-                            print(f"[DEBUG] Elixir image matched: {i} ({image_file})")
-                            return i
-                    except Exception as e:
-                        pass
-                        #print(f"[ERROR] locateOnScreen failed for {image_file}: {e}") # for debugging
+                    template = cv2.imread(image_file, cv2.IMREAD_COLOR)
+                    if template is None:
+                        continue
 
-                print("[WARN] No elixir image matched — assuming 5")
-                return 5
+                    res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
+                    _, max_val, _, _ = cv2.minMaxLoc(res)
 
-            elif self.os_type == "Windows":
-                # Windows: count purple bars by pixel color sampling
-                target_color = (225, 128, 229)
-                tolerance = 80
-                count = 0
-
-                # The x-range and y position should match where bars appear in your resolution
-                for x in range(1512, 1892, 38):  # adjust spacing if needed
-                    try:
-                        r, g, b = pyautogui.pixel(x, 989)
-                        if (
-                            abs(r - target_color[0]) <= tolerance and
-                            abs(g - target_color[1]) <= tolerance and
-                            abs(b - target_color[2]) <= tolerance
-                        ):
-                            count += 1
-                    except Exception as e:
-                        print(f"[WARN] pixel read failed at x={x}: {e}")
-
-                print(f"[DEBUG] Elixir detected (Windows): {count}")
-                return min(count, 5)
+                    if max_val > 0.9 and max_val > best_match_val:
+                        best_match_val = max_val
+                        best_elixir = i
+                if best_elixir is not None:
+                    print(f"[DEBUG] Elixir detected: {best_elixir} (confidence={best_match_val:.2f})")
+                    self.last_elixir = best_elixir
+                    return best_elixir
+                else:
+                    print("[WARN] No elixir match found — assuming previous or max (5)")
+                    return getattr(self, "last_elixir", 5)
 
             else:
-                print("[WARN] Unsupported OS type — returning 0")
-                return 0
+                # fallback or Windows implementation
+                return 5
 
         except Exception as e:
             print(f"[ERROR] Elixir detection failed: {e}")
-            return 0
+            return getattr(self, "last_elixir", 0)
 
     def select_card(self,action_nr):
         # assume action_nr between 0 and 2

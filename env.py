@@ -60,7 +60,6 @@ class MergeTacticsEnv:
     def step(self, action_index):
         """
         Perform one step in the environment.
-        Uses card names (string classes) instead of numeric IDs.
         """
 
         # Get current elixir count
@@ -74,6 +73,9 @@ class MergeTacticsEnv:
         # Extract the card names (strings)
         card_classes = list(next_state[:3])  # first 3 elements = card names
         chosen_card_name = card_classes[action_index]
+        print(card_classes)
+        print(action_index)
+        print(chosen_card_name)
 
         # Get cost from dictionary (default = 5 if unknown)
         card_cost = CARD_COSTS.get(chosen_card_name, 5)
@@ -109,7 +111,7 @@ class MergeTacticsEnv:
         cards = [self.detector.detect_card(i) for i in range(3)]
         troop_classes = [t['class_id'] for t in troops]
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
-        print(card_classes)
+        # print(card_classes) #testing
 
         obs = card_classes + troop_classes
         if len(obs) < self.state_size:
