@@ -168,10 +168,17 @@ class MergeTacticsEnv:
     
 
     def extract_health_from_image(self, file_path, default_health):
+        if self.os_type == "Darwin":
+            # to do: adjust scale_factor, this is just a placeholder
+            scale_factor = 5
+        elif self.os_type == "Windows":
+            scale_factor = 5
+
         try:
+
             img = Image.open(file_path)
             img = ImageOps.invert(img.convert('RGB'))
-            img = img.resize((img.width * 2, img.height * 2))
+            img = img.resize((img.width * scale_factor, img.height * scale_factor))
             img_np = np.array(img)
             results = self.reader.readtext(img_np)
             print(results)
