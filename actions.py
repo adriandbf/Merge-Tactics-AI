@@ -57,6 +57,15 @@ class Actions:
             self.IS_DONE_y = 267*2
             self.IS_DONE_COLOUR = (26,26,32)
 
+            # to od: replace this values with the actual values
+            # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
+            self.RANKING_X = 1
+            self.RANKING_FRIST_Y = 1
+            self.RANKING_SECOND_Y = 2
+            self.RANKING_THIRD_Y = 3
+            self.RANKING_FOURTH_Y = 4
+            self.RANKING_SELF_COLOR = (1,1,1)
+
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1476
             self.TOP_LEFT_Y = 366
@@ -96,6 +105,15 @@ class Actions:
             self.IS_DONE_X = 1414
             self.IS_DONE_y = 189
             self.IS_DONE_COLOUR = (22,22,15)
+
+            # to od: replace this values with the actual values
+            # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
+            self.RANKING_X = 1551
+            self.RANKING_FRIST_Y = 294
+            self.RANKING_SECOND_Y = 413
+            self.RANKING_THIRD_Y = 527
+            self.RANKING_FOURTH_Y = 642
+            self.RANKING_SELF_COLOR = (229, 172, 46)
 
         self.card_keys = {
             0: '1',  # Changed from 1 to 0
@@ -254,6 +272,31 @@ class Actions:
             return True
         else:
             return False
+        
+    # this function should only be called in the is_done state for right values
+    # returns the ranking from 1 to 4 
+    def get_ranking(self):
+
+        default_ranking = 4
+
+        color = pyautogui.pixel(self.RANKING_X, self.RANKING_FRIST_Y)
+        if color == self.RANKING_SELF_COLOR:
+            return 1
+        
+        color = pyautogui.pixel(self.RANKING_X, self.RANKING_SECOND_Y)
+        if color == self.RANKING_SELF_COLOR:
+            return 2
+        
+        color = pyautogui.pixel(self.RANKING_X, self.RANKING_THIRD_Y)
+        if color == self.RANKING_SELF_COLOR:
+            return 3
+        
+        color = pyautogui.pixel(self.RANKING_X, self.RANKING_FOURTH_Y)
+        if color == self.RANKING_SELF_COLOR:
+            return 4
+        
+        return default_ranking
+        
 
 
         

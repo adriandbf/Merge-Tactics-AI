@@ -1,30 +1,30 @@
-from env import MergeTacticsEnv
-from agent import DQNAgent
-import numpy as np
+# from env import MergeTacticsEnv
+# from agent import DQNAgent
+# import numpy as np
 
-agentType = "DQN" # PPO or DQN available
-selfDefensePriority = 1 # number between 0 and 1
-randomPlay = False # True or False
+# agentType = "DQN" # PPO or DQN available
+# selfDefensePriority = 1 # number between 0 and 1
+# randomPlay = False # True or False
 
-env = MergeTacticsEnv()
-env.set_selfDefensePriority(selfDefensePriority)
-env.set_constant_reward(randomPlay)
-if agentType == "DQN":
-    agent = DQNAgent(env.state_size, env.action_size)
-elif agentType == "PPO":
-    # to do: implement PPO case
-    pass
-else: 
-    agent = DQNAgent(env.state_size, env.action_size)
+# env = MergeTacticsEnv()
+# env.set_selfDefensePriority(selfDefensePriority)
+# env.set_constant_reward(randomPlay)
+# if agentType == "DQN":
+#     agent = DQNAgent(env.state_size, env.action_size)
+# elif agentType == "PPO":
+#     # to do: implement PPO case
+#     pass
+# else: 
+#     agent = DQNAgent(env.state_size, env.action_size)
 
-state = env.reset()
+# state = env.reset()
 
-for step in range(1):
-    action = agent.act(state)
-    next_state, reward, done = env.step(action)
-    agent.remember(state, action, reward, next_state, done)
-    print(f"Step {step+1}: action={action}, reward={reward}")
-    state = next_state
+# for step in range(1):
+#     action = agent.act(state)
+#     next_state, reward, done = env.step(action)
+#     agent.remember(state, action, reward, next_state, done)
+#     print(f"Step {step+1}: action={action}, reward={reward}")
+#     state = next_state
 
 # import pyautogui
 # import time
@@ -33,6 +33,9 @@ for step in range(1):
 # x,y = pyautogui.position()
 # print(x)
 # print(y)
+
+# color= pyautogui.pixel(x,y)
+# print(color)
 
 # # for mac the x and y need to be doubled - retina display makes it wonky
 # color= pyautogui.pixel(2*x,2*y)
@@ -192,3 +195,10 @@ for step in range(1):
 
 # for p in preds2:
 #     print(p['class'])
+
+from actions import Actions
+
+a = Actions()
+
+rank = a.get_ranking()
+print(rank)

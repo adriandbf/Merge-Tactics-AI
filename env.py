@@ -54,6 +54,8 @@ class MergeTacticsEnv:
 
     # this method should start a new game and reset the parameters
     def reset(self):
+        rank = self.actor.get_ranking()
+        print(rank)
         self.actor.press_replay_button()
         self.done = False
         self.state = self._get_observation()
