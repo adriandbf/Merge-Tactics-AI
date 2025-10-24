@@ -42,7 +42,7 @@ def get_latest_model_path(models_dir="models"):
 # accepted inputs for agentType:  DQN or PPO  (default for invalid values is DQN)
 # randomPlay is a flag if the agent should just play random or if it should actualy learn (sets a constant reward function)
 # selfDefensePriority is a value between 0 and 1 that indicates how much defending our own health is rewarded with respect to decreasing the health of the others
-def train(agentType, selfDefensePriority, randomPlay):
+def train(agentType, selfDefensePriority=1, randomPlay=False):
 
     env = MergeTacticsEnv()
     env.set_selfDefensePriority(selfDefensePriority)
