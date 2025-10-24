@@ -17,6 +17,14 @@ TO DO:
 # How to run this project
 TO DO
 
+# Results
+TO DO 
+- PPO survival
+- PPO combat
+- DQN survival
+- DQN combat
+- random agent
+
 # Possible extensions and open issues
 - Currently the model is not rewarded for a whole game in general. The ranking at the end of the game therefore does not influence the training. This could be added if we would want to extend this project.
 - Currently there are three actions (clicking one of the three cards). This could be improved by extending the action space to enable the model to also do nothing and wait as an action, sell troups which are on the bank or to change the poitions of troops in the arena.
@@ -24,6 +32,7 @@ TO DO
 - The current reward function is suitable base for this project. However the impact of selecting a card is not directly influencing a change in the health of players and also a change in the health of players is not always due to the last card played. So just considering the change of the healthbars after clicking a card as a reward is not sufficent if this project is to be extended and used often. 
 - The performance of the whole project could be improved as depending on the laptop used we had some troubles with the execuition times. 
 - The detection of the numbers of the health of the players (extract_health_from_image() in env.py) is not working perfectly accurate. This could be a focus for further improvement. 
+- It would be nice to have an easier way to set up all the variables for the actions class. To get the specific pixel values we always needed to place the mouse in the specific positions, get the pixel data and enter the values manually. 
 
 # Credits
 As an inspiration the GitHuB project CRBot-public from krazyness (https://github.com/krazyness/CRBot-public/blob/main/dqn_agent.py, accesed 24.10.2025) was used. The base of the files train.py and agent.py were extracted from the CRBot-public project and then adjusted to our needs. All other files were developed by the authors of this project (Adrian and Vera).
