@@ -54,8 +54,9 @@ class MergeTacticsEnv:
 
     # this method should start a new game and reset the parameters
     def reset(self):
+        time.sleep(2)
         rank = self.actor.get_ranking()
-        print(rank)
+        print(f"Game finished with rank {rank}")
         self.actor.press_replay_button()
         self.done = False
         self.state = self._get_observation()
@@ -67,6 +68,12 @@ class MergeTacticsEnv:
         """
         Perform one step in the environment.
         """
+
+         # check if game is over now
+        is_done = self.actor.detect_is_done()
+        if is_done == True:
+            print("done flag set in step function")
+            return self.state, 1 ,True
 
         # Update screen and get new observation
         self.actor.capture_area(os.path.join("screenshots", "area.png"))
@@ -97,11 +104,6 @@ class MergeTacticsEnv:
 
         # Update state
         self.state = next_state
-
-        # check if game is over now
-        is_done = self.actor.detect_is_done()
-        if is_done == True:
-            return next_state, reward,True
 
         # Return transition
         return next_state, reward, False
@@ -143,7 +145,7 @@ class MergeTacticsEnv:
         weight = self.selfDefensePriority
 
         # default value if healthe couldn't be detected
-        health_default = 6
+        health_default = 10
 
         self.actor.capture_healthbars()
         self_position = self.actor.get_current_player_position()
