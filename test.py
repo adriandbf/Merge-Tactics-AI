@@ -20,7 +20,7 @@ else:
 done = False
 state = env.reset()
 
-for step in range(10):
+for step in range(3):
     
     if done == True:
        state = env.reset()
@@ -211,3 +211,18 @@ for step in range(10):
 
 # rank = a.get_ranking()
 # print(rank)
+
+
+# this s just copied from main of env.py -> to do: transform into test
+
+# # testing screen capture functions
+# def main():
+
+#     m = MergeTacticsEnv()
+
+#     m.extract_health_from_image("screenshots/health_p4.png", 3)
+
+#     # old_state = np.array([5, 10, 10])
+#     # new_state = np.array([7, 9, 11])
+
+#     # m._compute_reward(old_state, new_state)

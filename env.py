@@ -4,9 +4,7 @@ from card_data import CARD_COSTS
 import numpy as np
 import time
 import os
-import easyocr
 import platform
-from PIL import Image, ImageOps
 
 # to do: refactor-statesize in constant
 
@@ -24,7 +22,6 @@ class MergeTacticsEnv:
         self.health_p2 = 12
         self.health_p3 = 12
         self.health_p4 = 12
-        self.reader = easyocr.Reader(['en'], gpu=False)
         self.selfDefensePriority = 1
         self.constant_reward = False
 
@@ -150,10 +147,10 @@ class MergeTacticsEnv:
         self.actor.capture_healthbars()
         self_position = self.actor.get_current_player_position()
 
-        new_health_p1 = self.extract_health_from_image("screenshots/health_p1.png", health_default)
-        new_health_p2 = self.extract_health_from_image("screenshots/health_p2.png", health_default)
-        new_health_p3 = self.extract_health_from_image("screenshots/health_p3.png", health_default)
-        new_health_p4 = self.extract_health_from_image("screenshots/health_p4.png", health_default)
+        new_health_p1 = self.detector.detect_health("screenshots/health_p1.png", health_default)
+        new_health_p2 = self.detector.detect_health("screenshots/health_p2.png", health_default)
+        new_health_p3 = self.detector.detect_health("screenshots/health_p3.png", health_default)
+        new_health_p4 = self.detector.detect_health("screenshots/health_p4.png", health_default)
 
         print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
 
@@ -194,41 +191,11 @@ class MergeTacticsEnv:
 
     def set_constant_reward(self, constant_reward):
         self.constant_reward = constant_reward
-
-    def extract_health_from_image(self, file_path, default_health):
-        if self.os_type == "Darwin":
-            # to do: adjust scale_factor, this is just a placeholder
-            scale_factor = 8
-        elif self.os_type == "Windows":
-            scale_factor = 5
-
-        try:
-
-            img = Image.open(file_path)
-            img = ImageOps.invert(img.convert('RGB'))
-            img = img.resize((img.width * scale_factor, img.height * scale_factor))
-            img_np = np.array(img)
-            results = self.reader.readtext(img_np)
-
-            if results:
-                _, text, _ = results[0]
-                clean_text = text.strip()
-                number = int(clean_text)
-                if 0 <= number <= 12:
-                    return number
-                else:
-                    return default_health
-            else:
-                return default_health
-        except Exception:
-            return default_health
     
 # testing screen capture functions
 def main():
 
     m = MergeTacticsEnv()
-
-    m.extract_health_from_image("screenshots/health_p4.png", 3)
 
     # old_state = np.array([5, 10, 10])
     # new_state = np.array([7, 9, 11])

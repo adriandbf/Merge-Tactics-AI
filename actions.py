@@ -3,10 +3,8 @@ import cv2
 from PIL import ImageGrab
 import os
 import numpy as np
-from datetime import datetime
-import time
 import platform
-import easyocr
+
 
 class Actions:
     def __init__(self):
