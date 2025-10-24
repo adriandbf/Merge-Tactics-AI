@@ -87,59 +87,78 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
     else:
         metrics = []
 
-    for ep in range(episodes):
-        if controller.is_exit_requested():
-            print("Training interrupted by user.")
-            break
+    try:
+        for ep in range(episodes):
+            if controller.is_exit_requested():
+                print("Training interrupted by user.")
+                break
 
-        state = env.reset()
-        total_reward = 0
+            state = env.reset()
+            total_reward = 0
 
-        print(f"Episode {ep + 1} starting. Epsilon: {agent.epsilon:.3f}") 
-        
-        done = False
-        while not done:
-
-            # get current action the model would do 
-            action = agent.act(state)
-            # perform the action and save the outcome
-            next_state, reward, done = env.step(action)
-            agent.remember(state, action, reward, next_state, done)
-            # update the model
-            agent.replay(batch_size)
-            # update vars
-            state = next_state
-            total_reward += reward
-        print(f"Episode {ep + 1}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}")
-
-        # appending the data
-        metrics.append({
-            "episode": ep + 1,
-            "total_reward": total_reward,
-            "epsilon": round(agent.epsilon, 4),
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-        # Save model and epsilon every 10 episodes
-        if ep % 10 == 0:
-            # update the values in the target model with those from the model we are training on
-            agent.update_target_model()
+            print(f"Episode {ep + 1} starting. Epsilon: {agent.epsilon:.3f}") 
             
-            # save model 
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            model_path = os.path.join("models", f"model_{timestamp}.pth")
-            torch.save(agent.model.state_dict(), model_path)
+            done = False
+            while not done:
 
-            # save epsilon value as meta data
-            meta_path = os.path.join("models", f"meta_{timestamp}.json")
-            with open(meta_path, "w") as f:
-                json.dump({"epsilon": agent.epsilon}, f)
+                # get current action the model would do 
+                action = agent.act(state)
+                # perform the action and save the outcome
+                next_state, reward, done = env.step(action)
+                agent.remember(state, action, reward, next_state, done)
+                # update the model
+                agent.replay(batch_size)
+                # update vars
+                state = next_state
+                total_reward += reward
+            print(f"Episode {ep + 1}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}")
 
-            # saving metrics
-            with open(metrics_path, "w") as f:
-                json.dump(metrics, f, indent=4)
+            # appending the data
+            metrics.append({
+                "episode": ep + 1,
+                "total_reward": total_reward,
+                "epsilon": round(agent.epsilon, 4),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+
+            # Save model and epsilon every 10 episodes
+            if ep % 10 == 0:
+                # update the values in the target model with those from the model we are training on
+                agent.update_target_model()
                 
-            print(f"Model and epsilon saved: {model_path}")
+                # save model 
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                model_path = os.path.join("models", f"model_{timestamp}.pth")
+                torch.save(agent.model.state_dict(), model_path)
+
+                # save epsilon value as meta data
+                meta_path = os.path.join("models", f"meta_{timestamp}.json")
+                with open(meta_path, "w") as f:
+                    json.dump({"epsilon": agent.epsilon}, f)
+
+                # saving metrics
+                with open(metrics_path, "w") as f:
+                    json.dump(metrics, f, indent=4)
+                    
+                print(f"Model and epsilon saved: {model_path}")
+    except KeyboardInterrupt:
+        print("\n[INTERRUPT] Ctrl+C detected — saving current progress...")
+
+    finally:
+        # Final save on exit
+        agent.update_target_model()
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        model_path = os.path.join("models", f"model_{timestamp}.pth")
+        torch.save(agent.model.state_dict(), model_path)
+
+        meta_path = os.path.join("models", f"meta_{timestamp}.json")
+        with open(meta_path, "w") as f:
+            json.dump({"epsilon": agent.epsilon}, f)
+
+        with open(metrics_path, "w") as f:
+            json.dump(metrics, f, indent=4)
+
+        print(f"[FINAL SAVE] Model and metrics saved safely at {model_path}")
 
 if __name__ == "__main__":
     

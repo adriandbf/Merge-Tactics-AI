@@ -51,9 +51,9 @@ class Actions:
 
             # to do: insert actual values, this are only placeholders
             # a pixel with a colour that it only has when a game is done
-            self.IS_DONE_X = 1006*2 # Multiplied by 2 for retina display
-            self.IS_DONE_y = 267*2
-            self.IS_DONE_COLOUR = (26,26,32)
+            self.IS_DONE_X = 1053*2 # Multiplied by 2 for retina display
+            self.IS_DONE_y = 927*2
+            self.IS_DONE_COLOUR = (178,133,30)
 
             # to od: replace this values with the actual values
             # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter

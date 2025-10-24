@@ -1,35 +1,36 @@
-from env import MergeTacticsEnv
-from agent import DQNAgent
-import numpy as np
+# from env import MergeTacticsEnv
+# from agent import DQNAgent
+# import numpy as np
 
-agentType = "DQN" # PPO or DQN available
-selfDefensePriority = 1 # number between 0 and 1
-randomPlay = False # True or False
+# agentType = "DQN" # PPO or DQN available
+# selfDefensePriority = 1 # number between 0 and 1
+# randomPlay = False # True or False
 
-env = MergeTacticsEnv()
-env.set_selfDefensePriority(selfDefensePriority)
-env.set_constant_reward(randomPlay)
-if agentType == "DQN":
-    agent = DQNAgent(env.state_size, env.action_size)
-elif agentType == "PPO":
-    # to do: implement PPO case
-    pass
-else: 
-    agent = DQNAgent(env.state_size, env.action_size)
+# env = MergeTacticsEnv()
+# env.set_selfDefensePriority(selfDefensePriority)
+# env.set_constant_reward(randomPlay)
+# if agentType == "DQN":
+#     agent = DQNAgent(env.state_size, env.action_size)
+# elif agentType == "PPO":
+#     # to do: implement PPO case
+#     pass
+# else: 
+#     agent = DQNAgent(env.state_size, env.action_size)
 
-done = False
-state = env.reset()
+# done = False
+# state = env.reset()
 
-for step in range(3):
+
+# for step in range(10):
     
-    if done == True:
-       state = env.reset()
+#     if done == True:
+#        state = env.reset()
 
-    action = agent.act(state)
-    next_state, reward, done = env.step(action)
-    agent.remember(state, action, reward, next_state, done)
-    print(f"Step {step+1}: action={action}, reward={reward}")
-    state = next_state
+#     action = agent.act(state)
+#     next_state, reward, done = env.step(action)
+#     agent.remember(state, action, reward, next_state, done)
+#     print(f"Step {step+1}: action={action}, reward={reward}")
+#     state = next_state
 
 
       
@@ -212,7 +213,6 @@ for step in range(3):
 # rank = a.get_ranking()
 # print(rank)
 
-
 # this s just copied from main of env.py -> to do: transform into test
 
 # # testing screen capture functions
@@ -226,3 +226,41 @@ for step in range(3):
 #     # new_state = np.array([7, 9, 11])
 
 #     # m._compute_reward(old_state, new_state)
+
+# from actions import Actions
+# import pyautogui
+# import time
+
+# def test_detect_is_done_live():
+#     print("[INFO] Starting detect_is_done live test...")
+#     try:
+#         a = Actions()
+#         print("[INFO] Actions initialized successfully.")
+#         print(f"[INFO] Checking pixel at ({a.IS_DONE_X}, {a.IS_DONE_y}) expecting color {a.IS_DONE_COLOUR}")
+#     except Exception as e:
+#         print(f"[ERROR] Failed to initialize Actions: {e}")
+#         return
+
+#     # Give you a few seconds to focus the game window
+#     print("[INFO] You have 3 seconds to prepare your screen...")
+#     time.sleep(3)
+
+#     try:
+#         # Read raw pixel color directly
+#         pixel_color = pyautogui.pixel(a.IS_DONE_X, a.IS_DONE_y)
+#         print(f"[DEBUG] Raw pixel color read from screen: {pixel_color}")
+
+#         # Now call your detection logic
+#         result = a.detect_is_done()
+#         print(f"[RESULT] detect_is_done() returned: {result}")
+
+#         if result:
+#             print("[PASS] Detected expected color → Game likely finished.")
+#         else:
+#             print("[INFO] Color didn't match expected finish color.")
+#     except Exception as e:
+#         print(f"[ERROR] Pixel read or detect_is_done() failed: {e}")
+
+# if __name__ == "__main__":
+#     test_detect_is_done_live()
+
