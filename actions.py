@@ -1,5 +1,4 @@
 import pyautogui
-import cv2
 from PIL import ImageGrab
 import os
 import numpy as np
@@ -10,7 +9,7 @@ class Actions:
     def __init__(self):
         self.os_type = platform.system()
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.images_folder = os.path.join(self.script_dir, 'main_images')
+        
         
         if self.os_type == "Darwin":
             self.TOP_LEFT_X = 1036
@@ -157,12 +156,9 @@ class Actions:
 
         return cards
 
-    # TODO: fix windows
-    def count_elixir(self):
-        """Detect elixir"""
-        try:
-            if self.os_type == "Darwin":
-                # macOS: template image matching
+    
+    def capture_elixir(self):
+        
                 region = (
                     self.ELIXIR_X,
                     self.ELIXIR_Y,
@@ -172,41 +168,9 @@ class Actions:
 
                 # Take region screenshot (high precision, retina-safe)
                 screenshot = ImageGrab.grab(bbox=region)
-                screen_rgb = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+                save_path = os.path.join(self.script_dir, 'screenshots', "elixir.png")
+                screenshot.save(save_path)
 
-                best_match_val = 0
-                best_elixir = None
-
-                for i in range(5, -1, -1):  # check higher elixir values first
-                    image_file = os.path.join(self.images_folder, f"{i}elixir.png")
-                    if not os.path.exists(image_file):
-                        continue  # skip if missing
-
-                    template = cv2.imread(image_file, cv2.IMREAD_COLOR)
-                    if template is None:
-                        continue
-
-                    res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
-                    _, max_val, _, _ = cv2.minMaxLoc(res)
-
-                    if max_val > 0.9 and max_val > best_match_val:
-                        best_match_val = max_val
-                        best_elixir = i
-                if best_elixir is not None:
-                    print(f"[DEBUG] Elixir detected: {best_elixir} (confidence={best_match_val:.2f})")
-                    self.last_elixir = best_elixir
-                    return best_elixir
-                else:
-                    print("[WARN] No elixir match found — assuming previous or max (5)")
-                    return getattr(self, "last_elixir", 5)
-
-            else:
-                # fallback or Windows implementation
-                return 5
-
-        except Exception as e:
-            print(f"[ERROR] Elixir detection failed: {e}")
-            return getattr(self, "last_elixir", 0)
 
     def select_card(self,action_nr):
         # assume action_nr between 0 and 2

@@ -3,13 +3,13 @@ In this project we tried to make an agent play
 - python 
 
 # Technical decisions and dependencies
-**Docker:**
+## Docker:
 TO DO
 
-**Emulator:** 
+## Emulator: 
 The game clash royal itself is run in an android emulator on our laptops to allow interaction by our program. Because of compability we choose **BlueStacks** as our emulator. BlueStacks is available for Darwin and Windows for free. For Linux an alternative must be considered. Bluestacks can be downloaded directly from the BlueStacks Website: https://www.bluestacks.com/download.html (accesed 25.10.2025)
 
-**Visual models:**
+## Visual models:
 In order to get the information we need from the game, our program takes screenshots and then detects the information on those with different visual models. 
 
 For detecting the numbers that indicate the health of the player **EasyOCR** was used. To download EasyOCR run 'pip install easyocr'.
@@ -46,6 +46,8 @@ TO DO
 1) install all from above in dependencies
 2) Docker stuff
 ) to start press teh button
+update pixel values
+run commands
 
 # Results
 TO DO 
@@ -69,5 +71,5 @@ TO DO
 As an inspiration the GitHuB project CRBot-public from krazyness (https://github.com/krazyness/CRBot-public/blob/main/dqn_agent.py, accesed 24.10.2025) was used. The base of the files train.py and agent.py were extracted from the CRBot-public project and then adjusted to our needs. All other files were developed by the authors of this project (Adrian and Vera).
 
 # Authors
-Adrian 
+Adrian Fudge   
 Vera Schmitt 

@@ -75,6 +75,8 @@ class MergeTacticsEnv:
         # Update screen and get new observation
         self.actor.capture_arena(os.path.join("screenshots", "arena.png"))
         self.actor.capture_cards(os.path.join("screenshots", "card_area.png"))
+        self.actor.capture_elixir()
+        self.actor.capture_healths()
         next_state = self.get_observation()
 
         # Extract the card names and elixir
@@ -113,8 +115,8 @@ class MergeTacticsEnv:
         troop_classes = [t['class_id'] for t in troops]
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
         # print(card_classes) #testing
-
-        elixir = self.actor.count_elixir()
+        
+        elixir = self.detector.detect_elixir()
 
         # State vector with cards, elixir, and troops
         obs = card_classes + [elixir] + troop_classes
