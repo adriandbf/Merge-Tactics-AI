@@ -10,7 +10,7 @@ import cv2
 client = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
     # insert your api key here
-    api_key="************"
+    api_key="UJ8Z7Y81V4psRKlzyU7d"
 )
 
 class Detection:

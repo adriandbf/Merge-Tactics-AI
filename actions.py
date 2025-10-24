@@ -127,6 +127,12 @@ class Actions:
         elif self.os_type == "Darwin":
             pyautogui.click(1407, 868)
 
+    def capture_all(self):
+        self.capture_arena()
+        self.capture_cards()
+        self.capture_elixir()
+        self.capture_healths()
+
     def capture_arena(self, save_path=None):
         if save_path is None:
             save_path = os.path.join(self.script_dir, "screenshots", "arena.png")

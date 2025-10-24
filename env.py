@@ -73,10 +73,7 @@ class MergeTacticsEnv:
             return self.state, 1 ,True
 
         # Update screen and get new observation
-        self.actor.capture_arena(os.path.join("screenshots", "arena.png"))
-        self.actor.capture_cards(os.path.join("screenshots", "card_area.png"))
-        self.actor.capture_elixir()
-        self.actor.capture_healths()
+        self.actor.capture_all()
         next_state = self.get_observation()
 
         # Extract the card names and elixir
