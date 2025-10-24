@@ -191,7 +191,7 @@ class Actions:
                     res = cv2.matchTemplate(screen_rgb, template, cv2.TM_CCOEFF_NORMED)
                     _, max_val, _, _ = cv2.minMaxLoc(res)
 
-                    if max_val > 0.7 and max_val > best_match_val:
+                    if max_val > 0.9 and max_val > best_match_val:
                         best_match_val = max_val
                         best_elixir = i
                 if best_elixir is not None:
@@ -297,10 +297,6 @@ class Actions:
         
         return default_ranking
         
-
-
-        
-
 
 # testing screen capture functions
 def main():
