@@ -128,13 +128,13 @@ class Actions:
         elif self.os_type == "Darwin":
             pyautogui.click(1407, 868)
 
-    def capture_area(self, save_path=None):
+    def capture_arena(self, save_path=None):
         if save_path is None:
-            save_path = os.path.join(self.script_dir, "screenshots", "area.png")
+            save_path = os.path.join(self.script_dir, "screenshots", "arena.png")
         screenshot = pyautogui.screenshot(region=(self.TOP_LEFT_X, self.TOP_LEFT_Y, self.WIDTH, self.HEIGHT))
         screenshot.save(save_path)
 
-    def capture_card_area(self, save_path=None):
+    def capture_cards(self, save_path=None):
         """Capture screenshot of card area"""
         if save_path is None:
             save_path = os.path.join(self.script_dir, "screenshots", "card_area.png")
@@ -224,7 +224,7 @@ class Actions:
 
         pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
 
-    def capture_healthbars(self):
+    def capture_healths(self):
         
         save_path = os.path.join(self.script_dir, "screenshots", "health_p1.png")
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P1, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
@@ -302,10 +302,10 @@ def main():
     folder = "screenshots"
 
     a = Actions()
-    a.capture_area(os.path.join(folder, "area.png"))
-    a.capture_card_area(os.path.join(folder, "card_area.png"))
+    a.capture_arena(os.path.join(folder, "arena.png"))
+    a.capture_cards(os.path.join(folder, "card_area.png"))
     a.select_card(1)
-    a.capture_healthbars()
+    a.capture_healths()
     a.get_current_player_position()
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ class MergeTacticsEnv:
         print(f"Game finished with rank {rank}")
         self.actor.press_replay_button()
         self.done = False
-        self.state = self._get_observation()
+        self.state = self.get_observation()
         return self.state
 
     # a function that performs a given action in the actual game and returns the next_state, reward, done-flag
@@ -73,9 +73,9 @@ class MergeTacticsEnv:
             return self.state, 1 ,True
 
         # Update screen and get new observation
-        self.actor.capture_area(os.path.join("screenshots", "area.png"))
-        self.actor.capture_card_area(os.path.join("screenshots", "card_area.png"))
-        next_state = self._get_observation()
+        self.actor.capture_arena(os.path.join("screenshots", "arena.png"))
+        self.actor.capture_cards(os.path.join("screenshots", "card_area.png"))
+        next_state = self.get_observation()
 
         # Extract the card names and elixir
         card_classes = list(next_state[:3])  # first 3 elements = card names
@@ -97,7 +97,7 @@ class MergeTacticsEnv:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
 
         # get reward
-        reward = self._compute_reward(self.state, next_state)
+        reward = self.compute_reward(self.state, next_state)
 
         # Update state
         self.state = next_state
@@ -106,7 +106,7 @@ class MergeTacticsEnv:
         return next_state, reward, False
 
     
-    def _get_observation(self):
+    def get_observation(self):
         # detect troops + cards
         troops = self.detector.detect_troops()
         cards = [self.detector.detect_card(i) for i in range(3)]
@@ -125,7 +125,7 @@ class MergeTacticsEnv:
 
         return np.array(obs[:self.state_size], dtype=np.int32)
 
-    def _compute_reward(self, old_state, new_state):
+    def compute_reward(self, old_state, new_state):
 
         if self.constant_reward == True:
             return 0
@@ -144,7 +144,7 @@ class MergeTacticsEnv:
         # default value if healthe couldn't be detected
         health_default = 10
 
-        self.actor.capture_healthbars()
+        self.actor.capture_healths()
         self_position = self.actor.get_current_player_position()
 
         new_health_p1 = self.detector.detect_health("screenshots/health_p1.png", health_default)
@@ -200,7 +200,7 @@ def main():
     # old_state = np.array([5, 10, 10])
     # new_state = np.array([7, 9, 11])
 
-    # m._compute_reward(old_state, new_state)
+    # m.compute_reward(old_state, new_state)
 
 
 if __name__ == "__main__":

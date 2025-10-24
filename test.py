@@ -1,36 +1,36 @@
-# from env import MergeTacticsEnv
-# from agent import DQNAgent
-# import numpy as np
+from env import MergeTacticsEnv
+from agent import DQNAgent
+import numpy as np
 
-# agentType = "DQN" # PPO or DQN available
-# selfDefensePriority = 1 # number between 0 and 1
-# randomPlay = False # True or False
+agentType = "DQN" # PPO or DQN available
+selfDefensePriority = 1 # number between 0 and 1
+randomPlay = False # True or False
 
-# env = MergeTacticsEnv()
-# env.set_selfDefensePriority(selfDefensePriority)
-# env.set_constant_reward(randomPlay)
-# if agentType == "DQN":
-#     agent = DQNAgent(env.state_size, env.action_size)
-# elif agentType == "PPO":
-#     # to do: implement PPO case
-#     pass
-# else: 
-#     agent = DQNAgent(env.state_size, env.action_size)
+env = MergeTacticsEnv()
+env.set_selfDefensePriority(selfDefensePriority)
+env.set_constant_reward(randomPlay)
+if agentType == "DQN":
+    agent = DQNAgent(env.state_size, env.action_size)
+elif agentType == "PPO":
+    # to do: implement PPO case
+    pass
+else: 
+    agent = DQNAgent(env.state_size, env.action_size)
 
-# done = False
-# state = env.reset()
+done = False
+state = env.reset()
 
 
-# for step in range(10):
+for step in range(3):
     
-#     if done == True:
-#        state = env.reset()
+    if done == True:
+       state = env.reset()
 
-#     action = agent.act(state)
-#     next_state, reward, done = env.step(action)
-#     agent.remember(state, action, reward, next_state, done)
-#     print(f"Step {step+1}: action={action}, reward={reward}")
-#     state = next_state
+    action = agent.act(state)
+    next_state, reward, done = env.step(action)
+    agent.remember(state, action, reward, next_state, done)
+    print(f"Step {step+1}: action={action}, reward={reward}")
+    state = next_state
 
 
       
@@ -219,8 +219,6 @@
 # def main():
 
 #     m = MergeTacticsEnv()
-
-#     m.extract_health_from_image("screenshots/health_p4.png", 3)
 
 #     # old_state = np.array([5, 10, 10])
 #     # new_state = np.array([7, 9, 11])
