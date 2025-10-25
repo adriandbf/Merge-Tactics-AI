@@ -12,16 +12,14 @@ class MergeTacticsEnv:
     def __init__(self):
         # maximal state_size -3 troops in the arena can be included in the calculations
         self.os_type = platform.system()
-        self.state_size = 22         
+        self.state_size = 27  # to od: explain why 27       
         self.action_size = 3         
         self.state = np.zeros(self.state_size, dtype=np.int32)  
+        self.state[4:8] = 12
+        self.state[8] = 1
         self.done = False
         self.actor = Actions()
         self.detector = Detection()
-        self.health_p1 = 12
-        self.health_p2 = 12
-        self.health_p3 = 12
-        self.health_p4 = 12
         self.selfDefensePriority = 1
         self.constant_reward = False
 
@@ -115,8 +113,15 @@ class MergeTacticsEnv:
         
         elixir = self.detector.detect_elixir()
 
+        health_p1 = self.detector.detect_health(1)
+        health_p2 = self.detector.detect_health(2)
+        health_p3 = self.detector.detect_health(3)
+        health_p4 = self.detector.detect_health(4)
+
+        current_player_position = self.actor.get_current_player_position()
+
         # State vector with cards, elixir, and troops
-        obs = card_classes + [elixir] + troop_classes
+        obs = card_classes + [elixir] + [health_p1] + [health_p2] + [health_p3] + [health_p4] + [current_player_position] + troop_classes
 
         # padding the state vector to the right size (22)
         if len(obs) < self.state_size:
@@ -140,40 +145,28 @@ class MergeTacticsEnv:
         # 0 -> only brining the health of the other charakters down is important 
         weight = self.selfDefensePriority
 
-        # default value if healthe couldn't be detected
-        health_default = 10
+        old_healths = old_state[4:8]  
+        new_healths = new_state[4:8]
 
-        self.actor.capture_healths()
-        self_position = self.actor.get_current_player_position()
+        print(f"old_healths: {old_healths}")
+        print(f"new_healths: {new_healths}")
+        
+        self_position_old = old_state[8]
+        self_position_new = new_state[8]
 
-        new_health_p1 = self.detector.detect_health("screenshots/health_p1.png", health_default)
-        new_health_p2 = self.detector.detect_health("screenshots/health_p2.png", health_default)
-        new_health_p3 = self.detector.detect_health("screenshots/health_p3.png", health_default)
-        new_health_p4 = self.detector.detect_health("screenshots/health_p4.png", health_default)
-
-        print(f"New healths: {new_health_p1} {new_health_p2} {new_health_p3} {new_health_p4}")
 
         # losing parts of the own health is giving negativ reward while all losses of enemies health 
         # give positive reward (including all players, not only the one we are currently playing)
-        if self_position == 1:
-            reward = weight * (self.health_p1 - new_health_p1) * (-1) + (1-weight) * (self.health_p4 - new_health_p4 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
-        elif self_position == 2:
-            reward = weight * (self.health_p2 - new_health_p2) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p4 - new_health_p4 + self.health_p3 - new_health_p3)
-        elif self_position == 3:
-            reward = weight * (self.health_p3 - new_health_p3) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p4 - new_health_p4)
-        elif self_position == 4:
-            reward = weight * (self.health_p4 - new_health_p4) * (-1) + (1-weight) * (self.health_p1 - new_health_p1 + self.health_p2 - new_health_p2 + self.health_p3 - new_health_p3)
+        
+        self_health_change = new_healths[self_position_new - 1] - old_healths[self_position_old - 1]
+
+        overall_health_change = np.sum(new_healths) -  np.sum(old_healths)
+       
+        enimies_health_change = overall_health_change - self_health_change
+
+        reward = weight * (self_health_change) + (1-weight) * (enimies_health_change) * (-1)
         
         print(f"Reward: {reward}")
-
-        # setting the new values as the health values as a base for the next step
-        self.health_p1 = new_health_p1
-        self.health_p2 = new_health_p2
-        self.health_p3 = new_health_p3
-        self.health_p4 = new_health_p4
-
-        # Simple placeholder: +1 if any troop or card class changes
-        # return 1 if not np.array_equal(old_state, new_state) else 0
 
         return reward
     

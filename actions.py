@@ -9,6 +9,7 @@ class Actions:
     def __init__(self):
         self.os_type = platform.system()
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.current_player_position = 1
         
         
         if self.os_type == "Darwin":
@@ -132,6 +133,7 @@ class Actions:
         self.capture_cards()
         self.capture_elixir()
         self.capture_healths()
+        self.capture_current_player_position()
 
     def capture_arena(self, save_path=None):
         if save_path is None:
@@ -212,7 +214,7 @@ class Actions:
         screenshot = pyautogui.screenshot(region=(self.HEALTH_X_P4, self.HEALTH_Y, self.HEALTH_WIDTH, self.HEALTH_HEIGHT))
         screenshot.save(save_path)
 
-    def get_current_player_position(self):
+    def capture_current_player_position(self):
         # returns a value between 1 and 4 to indicate our position in the healthbars, or default_position if detection didn't work
         # red healthbar color values: (237, 101, 101)
         # blue healthbar color values: (151, 209, 234)
@@ -224,15 +226,18 @@ class Actions:
         colour4 = pyautogui.pixel(self.HEALTHBAR_X_P4, self.HEALTHBAR_Y)
 
         if colour1 == (151, 209, 234):
-            return 1
+            self.current_player_position = 1
         elif colour2 == (151, 209, 234):
-            return 2
+            self.current_player_position = 2
         elif colour3 == (151, 209, 234):
-            return 3
+            self.current_player_position = 3
         elif colour4 == (151, 209, 234):
-            return 4
+            self.current_player_position = 4
         else:
-            return self.default_position
+            self.current_player_position = self.default_position
+
+    def get_current_player_position(self):
+        return self.current_player_position
         
     def detect_is_done(self):
         color = pyautogui.pixel(self.IS_DONE_X, self.IS_DONE_y)

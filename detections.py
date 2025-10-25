@@ -10,7 +10,7 @@ import cv2
 client = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
     # insert your api key here
-    api_key="UJ8Z7Y81V4psRKlzyU7d"
+    api_key="*************"
 )
 
 class Detection:
@@ -51,7 +51,14 @@ class Detection:
             print(f"Card {card_nr} detection failed:", e)
             return []
         
-    def detect_health(self, file_path, default_health):
+    def detect_health(self, player_number):
+        default_health = 10
+        default_player_number = 1  # default player if player_number not between 1 and 4
+        if 1 <= player_number <= 4:
+            file_path = f"screenshots/health_p{player_number}.png"
+        else:
+            file_path = f"screenshots/health_p{default_player_number}.png"
+
         if self.os_type == "Darwin":
             scale_factor = 8
         elif self.os_type == "Windows":
@@ -116,3 +123,4 @@ class Detection:
         except Exception as e:
             print(f"[ERROR] Elixir detection failed: {e}")
             return getattr(self, "last_elixir", 0)
+        
