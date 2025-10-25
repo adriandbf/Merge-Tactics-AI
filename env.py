@@ -154,6 +154,9 @@ class MergeTacticsEnv:
         self_position_old = old_state[8]
         self_position_new = new_state[8]
 
+        print(f"self_position_old: {self_position_old}")
+        print(f"self_position_new: {self_position_new}")
+
 
         # losing parts of the own health is giving negativ reward while all losses of enemies health 
         # give positive reward (including all players, not only the one we are currently playing)
