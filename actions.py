@@ -4,7 +4,6 @@ import os
 import numpy as np
 import platform
 
-
 class Actions:
     def __init__(self):
         self.os_type = platform.system()
@@ -33,7 +32,6 @@ class Actions:
             self.ELIXIR_WIDTH = 1381 - 1322
             self.ELIXIR_HEIGHT = 961 - 900
 
-            # to do: insert actual values, this are only placeholders
             self.HEALTH_WIDTH = 1096 - 1083
             self.HEALTH_HEIGHT = 147 - 137
             self.HEALTH_Y = 137
@@ -42,27 +40,24 @@ class Actions:
             self.HEALTH_X_P3 = 1339
             self.HEALTH_X_P4 = 1467
 
-            # to do: insert actual values, this are only placeholders
             self.HEALTHBAR_Y = 146*2
             self.HEALTHBAR_X_P1 = 972*2
             self.HEALTHBAR_X_P2 = 1100*2
             self.HEALTHBAR_X_P3 = 1229*2
             self.HEALTHBAR_X_P4 = 1358*2
 
-            # to do: insert actual values, this are only placeholders
             # a pixel with a colour that it only has when a game is done
             self.IS_DONE_X = 1053*2 # Multiplied by 2 for retina display
             self.IS_DONE_y = 927*2
             self.IS_DONE_COLOUR = (178,133,30)
 
-            # to od: replace this values with the actual values
             # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
-            self.RANKING_X = 1
-            self.RANKING_FRIST_Y = 1
-            self.RANKING_SECOND_Y = 2
-            self.RANKING_THIRD_Y = 3
-            self.RANKING_FOURTH_Y = 4
-            self.RANKING_SELF_COLOR = (1,1,1)
+            self.RANKING_X = 1061
+            self.RANKING_FRIST_Y = 319
+            self.RANKING_SECOND_Y = 444
+            self.RANKING_THIRD_Y = 564
+            self.RANKING_FOURTH_Y = 682
+            self.RANKING_SELF_COLOR = (170,128,34)
 
         elif self.os_type == "Windows":
             self.TOP_LEFT_X = 1476
@@ -104,7 +99,6 @@ class Actions:
             self.IS_DONE_y = 189
             self.IS_DONE_COLOUR = (22,22,15)
 
-            # to od: replace this values with the actual values
             # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
             self.RANKING_X = 1551
             self.RANKING_FRIST_Y = 294
@@ -237,13 +231,14 @@ class Actions:
         colour3 = pyautogui.pixel(self.HEALTHBAR_X_P3, self.HEALTHBAR_Y)
         colour4 = pyautogui.pixel(self.HEALTHBAR_X_P4, self.HEALTHBAR_Y)
 
-        if colour1 == (0, 159, 231):
+        # Update each train
+        if colour1 == (0, 111, 161):
             self.current_player_position = 1
-        elif colour2 == (0, 159, 231):
+        elif colour2 == (0, 111, 161):
             self.current_player_position = 2
-        elif colour3 == (0, 159, 231):
+        elif colour3 == (0, 111, 161):
             self.current_player_position = 3
-        elif colour4 == (0, 159, 231):
+        elif colour4 == (0, 111, 161):
             self.current_player_position = 4
         else:
             self.current_player_position = self.default_position
@@ -320,10 +315,14 @@ class Actions:
             px3 = pyautogui.pixel(1430*2, 465*2)
             px4 = pyautogui.pixel(1059*2, 913*2)
             # Define reference colors
-            HOME_COLOR = (102, 236, 55)
+            HOME_COLOR = (71, 165, 38)
             # LOADING_COLOR = (120, 60, 230)
-            MATCH_COLOR = (221, 155, 37)
-            FINISHED_COLOR = (255, 190, 43)
+            MATCH_COLOR = (154, 108, 26)
+            FINISHED_COLOR = (178, 133, 30)
+
+            # print(px) # red=71, green=165, blue=38
+            # print(px3) # red=154, green=108, blue=26
+            # print(px4) # red=178, green=133, blue=30
 
             # Compare with tolerance helper
             def color_close(c1, c2, tol=40):

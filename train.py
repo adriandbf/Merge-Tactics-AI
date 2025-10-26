@@ -49,7 +49,7 @@ class KeyboardController:
         return self.should_exit
 
 # if there is at least one model already in the model folder, get the latest one
-def get_latest_model_path(models_dir="models"):
+def get_latest_model_path(models_dir):
     model_files = glob.glob(os.path.join(models_dir, "model_*.pth"))
     if not model_files:
         return None
@@ -74,12 +74,15 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
         agent = DQNAgent(env.state_size, env.action_size)
 
     # Ensure models directory exists
-    os.makedirs("models", exist_ok=True)
+    persona = "survival" if selfDefensePriority == 1 else "combat"
+    models_dir = os.path.join("models", persona)
+    os.makedirs(models_dir, exist_ok=True)
+
 
     # Load latest model if available
-    latest_model = get_latest_model_path("models")
+    latest_model = get_latest_model_path(models_dir)
     if latest_model:
-        agent.load(os.path.basename(latest_model))
+        agent.load(latest_model)
         # Load epsilon
         meta_path = latest_model.replace("model_", "meta_").replace(".pth", ".json")
         if os.path.exists(meta_path):
@@ -94,7 +97,7 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
     batch_size = 32
 
     # data tracking
-    metrics_path = os.path.join("models", "training_metrics.json")
+    metrics_path = os.path.join(models_dir, "training_metrics.json")
     if os.path.exists(metrics_path):
         try:
             with open(metrics_path, "r") as f:
@@ -133,8 +136,14 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
             # appending the data
             metrics.append({
                 "episode": ep + 1,
+                "persona": persona,
                 "total_reward": total_reward,
                 "epsilon": round(agent.epsilon, 4),
+                "time_alive": env.episode_stats.get("time_alive", 0),
+                "troops_deployed": env.episode_stats.get("troops_deployed", 0),
+                "average_elixir": env.episode_stats.get("average_elixir", 0),
+                "actions_taken": env.episode_stats.get("actions_taken", 0),
+                "rank": env.episode_stats.get("rank", "unknown"),
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             })
 
@@ -145,11 +154,11 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
                 
                 # save model 
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                model_path = os.path.join("models", f"model_{timestamp}.pth")
+                model_path = os.path.join(models_dir, f"model_{timestamp}.pth")
                 torch.save(agent.model.state_dict(), model_path)
 
                 # save epsilon value as meta data
-                meta_path = os.path.join("models", f"meta_{timestamp}.json")
+                meta_path = os.path.join(models_dir, f"meta_{timestamp}.json")
                 with open(meta_path, "w") as f:
                     json.dump({"epsilon": agent.epsilon}, f)
 
@@ -165,10 +174,10 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
         # Final save on exit
         agent.update_target_model()
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        model_path = os.path.join("models", f"model_{timestamp}.pth")
+        model_path = os.path.join(models_dir, f"model_{timestamp}.pth")
         torch.save(agent.model.state_dict(), model_path)
 
-        meta_path = os.path.join("models", f"meta_{timestamp}.json")
+        meta_path = os.path.join(models_dir, f"meta_{timestamp}.json")
         with open(meta_path, "w") as f:
             json.dump({"epsilon": agent.epsilon}, f)
 
@@ -180,11 +189,14 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
 if __name__ == "__main__":
     
     agentType = input("Which agent would you like to train? (DQN / PPO) DQN will be trained if input invalid: ").strip().upper()
+    personaType = input("Which persona would you like to train? (1 for survival / 0 for combat)").strip().upper()
 
-    if agentType == "DQN":
-        train("DQN")
+    if (agentType == "DQN" and personaType == "1") :
+        train("DQN", 1)
+    elif (agentType == "DQN" and personaType == "0"):
+        train("DQN", 0)
     elif agentType == "PPO":
-        train("PPO")
+        train("PPO",1)
     else:
-        train("DQN")
+        train("DQN",1)
         

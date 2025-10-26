@@ -49,10 +49,22 @@ class MergeTacticsEnv:
 
     # this method should start a new game and reset the parameters
     def reset(self):
+        # Short rest in case of extended loading screens
         time.sleep(2)
+
+        # Game Metrics Tracked
+        self.episode_stats = {
+            "start_time": time.time(),
+            "troops_deployed": 0,
+            "actions_taken": 0,
+            "elixir_sum": 0,
+            "elixir_count": 0,
+            "rank": 0
+        }
+
+        # In case agent is sent to home screen press main battle button (Doesn't affect any other screens)
         self.actor.press_battle_button()
-        rank = self.actor.get_ranking()
-        print(f"Game finished with rank {rank}")
+        # If agent is presently on the "Finished" screen
         self.actor.press_replay_button()
         self.done = False
         self.state = self.get_observation()
@@ -64,11 +76,19 @@ class MergeTacticsEnv:
         """
         Perform one step in the environment.
         """
+        # Stat tracking total actions (It's at the beginning because we're considering checking the done flag as an action)
+        self.episode_stats["actions_taken"] += 1
 
          # check if game is over now
         is_done = self.actor.detect_is_done()
         if is_done == True:
             print("done flag set in step function")
+            # Stat tracking
+            self.episode_stats["rank"] = self.actor.get_ranking()
+            self.episode_stats["time_alive"] = round(time.time() - self.episode_stats["start_time"], 2)
+            self.episode_stats["average_elixir"] = (
+                self.episode_stats["elixir_sum"] / max(1, self.episode_stats["elixir_count"])
+            )
             return self.state, 1 ,True
 
         # Update screen and get new observation
@@ -107,9 +127,13 @@ class MergeTacticsEnv:
         # Check affordability
         if elixir >= card_cost:
             print(f"[ACTION] Playing {chosen_card_name} (cost {card_cost}), elixir {elixir}")
+            self.episode_stats["troops_deployed"] += 1 # Tracks number of cards played
             self.actor.select_card(action_index)
         else:
             print(f"[SKIP] Not enough elixir ({elixir}) for {chosen_card_name} (cost {card_cost})")
+
+        self.episode_stats["elixir_sum"] += elixir
+        self.episode_stats["elixir_count"] += 1
 
         # get reward
         reward = self.compute_reward(self.state, next_state)
