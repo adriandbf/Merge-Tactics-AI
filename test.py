@@ -1,36 +1,36 @@
-from env import MergeTacticsEnv
-from agent import DQNAgent
-import numpy as np
+# from env import MergeTacticsEnv
+# from agent import DQNAgent
+# import numpy as np
 
-agentType = "DQN" # PPO or DQN available
-selfDefensePriority = 1 # number between 0 and 1
-randomPlay = False # True or False
+# agentType = "DQN" # PPO or DQN available
+# selfDefensePriority = 1 # number between 0 and 1
+# randomPlay = False # True or False
 
-env = MergeTacticsEnv()
-env.set_selfDefensePriority(selfDefensePriority)
-env.set_constant_reward(randomPlay)
-if agentType == "DQN":
-    agent = DQNAgent(env.state_size, env.action_size)
-elif agentType == "PPO":
-    # to do: implement PPO case
-    pass
-else: 
-    agent = DQNAgent(env.state_size, env.action_size)
+# env = MergeTacticsEnv()
+# env.set_selfDefensePriority(selfDefensePriority)
+# env.set_constant_reward(randomPlay)
+# if agentType == "DQN":
+#     agent = DQNAgent(env.state_size, env.action_size)
+# elif agentType == "PPO":
+#     # to do: implement PPO case
+#     pass
+# else: 
+#     agent = DQNAgent(env.state_size, env.action_size)
 
-done = False
-state = env.reset()
+# done = False
+# state = env.reset()
 
 
-for step in range(3):
+# for step in range(3):
     
-    if done == True:
-       state = env.reset()
+#     if done == True:
+#        state = env.reset()
 
-    action = agent.act(state)
-    next_state, reward, done = env.step(action)
-    agent.remember(state, action, reward, next_state, done)
-    print(f"Step {step+1}: action={action}, reward={reward}")
-    state = next_state
+#     action = agent.act(state)
+#     next_state, reward, done = env.step(action)
+#     agent.remember(state, action, reward, next_state, done)
+#     print(f"Step {step+1}: action={action}, reward={reward}")
+#     state = next_state
 
 
       
@@ -262,3 +262,76 @@ for step in range(3):
 # if __name__ == "__main__":
 #     test_detect_is_done_live()
 
+import pyautogui
+import time
+
+print("Hover your mouse over a unique pixel for each screen type to capture RGB values.\n")
+for screen in ["home", "loading", "match", "finished"]:
+    input(f"Press Enter when ready to capture color for {screen}...")
+    x, y = pyautogui.position()
+    color = pyautogui.pixel(2*x, 2*y)
+    print(f"{screen} → Position: ({x}, {y}), Color: {color}")
+    time.sleep(1)
+
+# Testing Detect Game State
+# import time
+# from actions import Actions
+
+# def main():
+    
+#     a = Actions()
+
+#     print("[TEST] Starting detect_game_state test...")
+#     print("Move to different game screens (home, loading, match, finished) when prompted.\n")
+
+#     try:
+#         for i in range(5):
+#             state = a.detect_game_state()
+#             print(f"[{i+1}] Detected game state → {state}")
+#             time.sleep(2)
+
+#     except KeyboardInterrupt:
+#         print("\n[TEST] Interrupted by user.")
+
+#     print("\n[TEST COMPLETE] If all detections matched your current screen, the function works correctly.")
+
+# if __name__ == "__main__":
+#     main()
+
+# import time
+# import pyautogui
+# from actions import Actions  # adjust this import path if needed
+
+# def test_capture_player_position():
+#     """
+#     Tests whether capture_current_player_position() correctly identifies
+#     which healthbar belongs to the player (blue color at one of the X positions).
+#     """
+#     a = Actions()
+
+#     print("\n=== Player Position Detection Test ===")
+#     print("Move to a match screen where the health bars are visible.")
+#     time.sleep(3)
+
+#     # capture and print raw pixel colors first
+#     coords = [
+#         ("P1", a.HEALTHBAR_X_P1, a.HEALTHBAR_Y),
+#         ("P2", a.HEALTHBAR_X_P2, a.HEALTHBAR_Y),
+#         ("P3", a.HEALTHBAR_X_P3, a.HEALTHBAR_Y),
+#         ("P4", a.HEALTHBAR_X_P4, a.HEALTHBAR_Y),
+#     ]
+#     for label, x, y in coords:
+#         color = pyautogui.pixel(x, y)
+#         print(f"{label} → ({x}, {y}) color = {color}")
+
+#     detected_position = a.capture_current_player_position()
+#     print(f"\n[RESULT] Detected current player position: {detected_position}")
+
+#     # basic assertions
+#     if 1 <= detected_position <= 4:
+#         print("[PASS] Valid player position detected.")
+#     else:
+#         print("[FAIL] No valid position detected — default used.")
+
+# if __name__ == "__main__":
+#     test_capture_player_position()

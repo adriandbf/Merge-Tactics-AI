@@ -43,11 +43,11 @@ class Actions:
             self.HEALTH_X_P4 = 1467
 
             # to do: insert actual values, this are only placeholders
-            self.HEALTHBAR_Y = 144
-            self.HEALTHBAR_X_P1 = 969
-            self.HEALTHBAR_X_P2 = 1097
-            self.HEALTHBAR_X_P3 = 1225
-            self.HEALTHBAR_X_P4 = 1353
+            self.HEALTHBAR_Y = 146*2
+            self.HEALTHBAR_X_P1 = 972*2
+            self.HEALTHBAR_X_P2 = 1100*2
+            self.HEALTHBAR_X_P3 = 1229*2
+            self.HEALTHBAR_X_P4 = 1358*2
 
             # to do: insert actual values, this are only placeholders
             # a pixel with a colour that it only has when a game is done
@@ -196,6 +196,18 @@ class Actions:
 
         pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
 
+    def press_battle_button(self):
+
+        if self.os_type == "Windows":
+            self.REPLAY_BUTTON_X = 1527 # need to set these
+            self.REPLAY_BUTTON_Y = 870
+
+        elif self.os_type == "Darwin":
+            self.REPLAY_BUTTON_X = 1222
+            self.REPLAY_BUTTON_Y = 777
+
+        pyautogui.click(self.REPLAY_BUTTON_X, self.REPLAY_BUTTON_Y)
+
     def capture_healths(self):
         
         save_path = os.path.join(self.script_dir, "screenshots", "health_p1.png")
@@ -225,16 +237,41 @@ class Actions:
         colour3 = pyautogui.pixel(self.HEALTHBAR_X_P3, self.HEALTHBAR_Y)
         colour4 = pyautogui.pixel(self.HEALTHBAR_X_P4, self.HEALTHBAR_Y)
 
-        if colour1 == (151, 209, 234):
+        if colour1 == (0, 159, 231):
             self.current_player_position = 1
-        elif colour2 == (151, 209, 234):
+        elif colour2 == (0, 159, 231):
             self.current_player_position = 2
-        elif colour3 == (151, 209, 234):
+        elif colour3 == (0, 159, 231):
             self.current_player_position = 3
-        elif colour4 == (151, 209, 234):
+        elif colour4 == (0, 159, 231):
             self.current_player_position = 4
         else:
             self.current_player_position = self.default_position
+
+        # if self.os_type == "windows":
+        #     if colour1 == (151, 209, 234):
+        #         self.current_player_position = 1
+        #     elif colour2 == (151, 209, 234):
+        #         self.current_player_position = 2
+        #     elif colour3 == (151, 209, 234):
+        #         self.current_player_position = 3
+        #     elif colour4 == (151, 209, 234):
+        #         self.current_player_position = 4
+        #     else:
+        #         self.current_player_position = self.default_position
+        # elif self.os_type == "darwin":
+        #     if colour1 == (0, 159, 231):
+        #         self.current_player_position = 1
+        #     elif colour2 == (0, 159, 231):
+        #         self.current_player_position = 2
+        #     elif colour3 == (0, 159, 231):
+        #         self.current_player_position = 3
+        #     elif colour4 == (0, 159, 231):
+        #         self.current_player_position = 4
+        #     else:
+        #         self.current_player_position = self.default_position
+        # else:
+        #     print("OS should be windows or mac for health function")
 
     def get_current_player_position(self):
         return self.current_player_position
@@ -269,6 +306,44 @@ class Actions:
             return 4
         
         return default_ranking
+    
+    def detect_game_state(self):
+        """
+        Detect which screen the game is currently on.
+        Returns one of: 'home', 'loading', 'match', 'finished', or 'unknown'.
+        Uses fast pixel color sampling for speed.
+        """
+        try:
+            # Read key pixels
+            px = pyautogui.pixel(1015*2, 935*2)   # home test pixel
+            # px2 = pyautogui.pixel(669, 684)
+            px3 = pyautogui.pixel(1430*2, 465*2)
+            px4 = pyautogui.pixel(1059*2, 913*2)
+            # Define reference colors
+            HOME_COLOR = (102, 236, 55)
+            # LOADING_COLOR = (120, 60, 230)
+            MATCH_COLOR = (221, 155, 37)
+            FINISHED_COLOR = (255, 190, 43)
+
+            # Compare with tolerance helper
+            def color_close(c1, c2, tol=40):
+                return all(abs(a - b) <= tol for a, b in zip(c1, c2))
+
+            # Decide state
+            if color_close(px, HOME_COLOR):
+                return "home"
+            # elif color_close(px2, LOADING_COLOR):
+                # return "loading"
+            elif color_close(px3, MATCH_COLOR):
+                return "match"
+            elif color_close(px4, FINISHED_COLOR):
+                return "finished"
+            else:
+                return "unknown"
+
+        except Exception as e:
+            print(f"[ERROR] detect_game_state failed: {e}")
+            return "unknown"
         
 
 # testing screen capture functions

@@ -10,7 +10,7 @@ import cv2
 client = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
     # insert your api key here
-    api_key="*************"
+    api_key="Ql9J5N8ZaQruGzkj3KF4"
 )
 
 class Detection:
@@ -19,13 +19,13 @@ class Detection:
         self.os_type = platform.system()
         self.reader = easyocr.Reader(['en'], gpu=False)
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.images_folder = os.path.join(self.script_dir, 'elixir_template_images')
+        self.images_folder = os.path.join(self.script_dir, 'main_images')
 
     def detect_troops(self):
         try:
             image_path = f"screenshots/arena.png"
             result = client.run_workflow(
-                workspace_name="vera-8vhle",
+                workspace_name="adriandbf",
                 workflow_id="troopdetection",
                 images={"image": image_path},
                 use_cache=True
@@ -40,8 +40,8 @@ class Detection:
         image_path = f"screenshots/card_{card_nr+1}.png"
         try:
             result = client.run_workflow(
-                workspace_name="vera-8vhle",
-                workflow_id="carddetection-2",
+                workspace_name="adriandbf",
+                workflow_id="carddetection",
                 images={"image": image_path},
                 use_cache=True
             )

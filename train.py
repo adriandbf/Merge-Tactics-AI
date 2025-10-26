@@ -7,10 +7,27 @@ import os
 import torch
 import glob
 import json
+import numpy as np
 from env import MergeTacticsEnv
 from agent import DQNAgent
 from pynput import keyboard
 from datetime import datetime
+
+# For converting data to python built-ins
+def convert_to_jsonable(obj):
+    """Recursively convert NumPy types to native Python types for JSON."""
+    if isinstance(obj, dict):
+        return {k: convert_to_jsonable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_jsonable(v) for v in obj]
+    elif isinstance(obj, (np.integer, np.int64)):
+        return int(obj)
+    elif isinstance(obj, (np.floating, np.float32, np.float64)):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
 
 # keyboard controller to stop training in a save way (press q to stop the training)
 class KeyboardController:
@@ -138,7 +155,7 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
 
                 # saving metrics
                 with open(metrics_path, "w") as f:
-                    json.dump(metrics, f, indent=4)
+                    json.dump(convert_to_jsonable(metrics), f, indent=4)
                     
                 print(f"Model and epsilon saved: {model_path}")
     except KeyboardInterrupt:
@@ -156,7 +173,7 @@ def train(agentType, selfDefensePriority=1, randomPlay=False):
             json.dump({"epsilon": agent.epsilon}, f)
 
         with open(metrics_path, "w") as f:
-            json.dump(metrics, f, indent=4)
+            json.dump(convert_to_jsonable(metrics), f, indent=4)
 
         print(f"[FINAL SAVE] Model and metrics saved safely at {model_path}")
 

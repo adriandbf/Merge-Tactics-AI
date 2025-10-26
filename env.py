@@ -50,6 +50,7 @@ class MergeTacticsEnv:
     # this method should start a new game and reset the parameters
     def reset(self):
         time.sleep(2)
+        self.actor.press_battle_button()
         rank = self.actor.get_ranking()
         print(f"Game finished with rank {rank}")
         self.actor.press_replay_button()
@@ -73,6 +74,23 @@ class MergeTacticsEnv:
         # Update screen and get new observation
         self.actor.capture_all()
         next_state = self.get_observation()
+
+        # This should be moved to the observation function
+        # check game state in case of transition frames
+        max_retries = 5
+        retry_delay = 0.5  # seconds
+
+        for attempt in range(max_retries):
+            state = self.actor.detect_game_state()
+            if state == "match":
+                break
+            else:
+                print(f"[WAIT] Detected state '{state}' (attempt {attempt + 1}/{max_retries}) — rechecking...")
+                time.sleep(retry_delay)
+        else:
+            # Only executed if loop never breaks (no match found)
+            print(f"[STOP] Confirmed non-match state after {max_retries} checks ({state}) — ending episode.")
+            return next_state, 0, True
 
         # Extract the card names and elixir
         card_classes = list(next_state[:3])  # first 3 elements = card names
