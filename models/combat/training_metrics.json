@@ -1,0 +1,26 @@
+[
+    {
+        "episode": 1,
+        "persona": "combat",
+        "total_reward": 1,
+        "epsilon": 0.9792,
+        "time_alive": 0,
+        "troops_deployed": 6,
+        "average_elixir": 0,
+        "actions_taken": 38,
+        "rank": 0,
+        "timestamp": "2025-10-26 19:13:04"
+    },
+    {
+        "episode": 2,
+        "persona": "combat",
+        "total_reward": 6,
+        "epsilon": 0.8921,
+        "time_alive": 0,
+        "troops_deployed": 2,
+        "average_elixir": 0,
+        "actions_taken": 31,
+        "rank": 0,
+        "timestamp": "2025-10-26 19:16:04"
+    }
+]
