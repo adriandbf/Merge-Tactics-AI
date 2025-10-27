@@ -77,6 +77,7 @@ Also the total amount at the end of the game does not directly indicate how good
 
 # Possible extensions and open issues
 - The models could be trained more and compared to each other. 
+- Although the rank funktion worked in testing in the training it always returned rank 0. This bug needs to be fixed and then the rank at the end of each episode should be the metric to compare how good the models did.
 - Currently the model is not rewarded for a whole game in general. The ranking at the end of the game therefore does not influence the training. This could be added if we would want to extend this project.
 - Currently there are three actions (clicking one of the three cards). This could be improved by extending the action space to enable the model to also do nothing and wait as an action, sell troups which are on the bank or to change the poitions of troops in the arena.
 - Currently the model only gets the classes of the troops on the field as information for the state. If it were to place troops in the arena, it could be implemented as well to give it the positions of all the troops in the arena as information in the state array.
@@ -86,7 +87,7 @@ Also the total amount at the end of the game does not directly indicate how good
 - It would be nice to have an easier way to set up this project, e. g. all the variables for the actions class. To get the specific pixel values we always needed to place the mouse in the specific positions, get the pixel data and enter the values manually.
 - A Linux extension could be implemented as this project only runs on Windows and Darwin.
 - Right now only the DQN agent is implemented, However the project is all set up to plug in a PPO agent as well and test it on this one. 
-- Our testing is not clean yet and should be implemented better so that it is easier to test. 
+- Our testing is not clean yet and should be implemented better so that it is easier to test.  
 
 
 # Credits
