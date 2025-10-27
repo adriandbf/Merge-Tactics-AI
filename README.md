@@ -6,9 +6,32 @@ The input for our model is a state vector that contains all the information abou
 TO DO: insert filename of demo
 TO DO: decibe which game we are playing in clash royal and from which level on it is available
 
-# Technical decisions and dependencies
-## Docker:
-TO DO
+# Technical Decisions and Dependencies
+
+## 🐳 Running Merge-Tactics-AI with Docker
+
+### 1. Pull the image
+```bash
+docker pull adriandbf/merge-tactics-ai:latest
+```
+
+### 2. Run the container
+```bash
+docker run -it --rm \
+  -v ./models:/app/models \
+  -v ./screenshots:/app/screenshots \
+  adriandbf/merge-tactics-ai
+```
+
+### 3. Open an interactive shell
+```bash
+docker run -it --rm --entrypoint bash adriandbf/merge-tactics-ai
+```
+
+To run the program, use:
+```bash
+xvfb-run -a python train.py
+```
 
 ## Emulator: 
 The game clash royal itself is run in an android emulator on our laptops to allow interaction by our program. Because of compability we choose **BlueStacks** as our emulator. BlueStacks is available for Darwin and Windows for free. For Linux an alternative must be considered. Bluestacks can be downloaded directly from the BlueStacks Website: https://www.bluestacks.com/download.html (accesed 25.10.2025)
@@ -20,13 +43,12 @@ For detecting the numbers that indicate the health of the player **EasyOCR** was
 
 For detecting the classes of the troops in the arena and the classes of the cards that we could play a customized visual model was necessary. Therefore we created two workflows with **Roboflow**. To acces those models follow the instructions below: 
 1) If you don't have an account yet, create one for free and sign in on Roboflow (https://roboflow.com/, accesed 25.10.2025).
-2) Click on this links to get acces to the model:
-    card_detection:
-    troop_detection: 
+2) Click on this links to get access to the model:
+- [Card Detection Workflow](https://app.roboflow.com/workflows/embed/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3b3JrZmxvd0lkIjoiWmxZSnR0S0hqOUV6N0tNM2EzWXYiLCJ3b3Jrc3BhY2VJZCI6InhRTzc2cHpRYThNb2MydktxeTlkb093aGlYZzIiLCJ1c2VySWQiOiJ4UU83NnB6UWE4TW9jMnZLcXk5ZG9Pd2hpWGcyIiwiaWF0IjoxNzYxMzI3MzA2fQ.T0j070mcJH8WmDnUBX02XY7LvZv8Wzo9uHBi5D_DA0w)
+- [Troop Detection Workflow](https://app.roboflow.com/workflows/embed/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3b3JrZmxvd0lkIjoiT09SdDJodVFXTXZ5RXVTdTBqWTQiLCJ3b3Jrc3BhY2VJZCI6InhRTzc2cHpRYThNb2MydktxeTlkb093aGlYZzIiLCJ1c2VySWQiOiJ4UU83NnB6UWE4TW9jMnZLcXk5ZG9Pd2hpWGcyIiwiaWF0IjoxNzYxNTM1MzM1fQ.uFf0Tl4BR2AHAshK4e16N2PApn3TVDCNbhF5NSev1gY)
+
 3) Click the fork button to copy the workflow into your account.
 4) Click on Deploy to get your workspace name and your API key. Enter both of these in the designated spots in the detections.py file. 
-
-TO DO: insert Roboflow links
 
 For detecting the amount of elixir **cv2** was used to compare the screenshot taken to template images of the elixir values up to five. With five we can already afford every card so all values above will be set by default to 5 to. To download cv2 run 'pip install opencv-python':
 
@@ -34,15 +56,20 @@ All other information  from the screen (ranking, player position, ...) is just d
 
 
 # How to run this project
-1) TO DO: Docker + set up everything described in Technical decisions and dependencies
+1) Docker + set up everything described in Technical decisions and dependencies
 2) Start the Clash Royal game in your emulator.
 3) As we need a lot of screenshots for this programm to work the pixels need to be specified for the positions of the areas to be captured. Go to the action file and adjust all the values in the init-function to match your game layout. Afterwards check that your screenshots taking by the program show the right areas and functions in the action class are working right. 
-4) TO DO: describe which commands to run to start the project 
+4) Running the train.py file starts the program
 
 # Results
-TO DO: DQN survival
-TO DO: DQN combat
-TO DO: random agent as comparison 
+ ## 📊 Model Performance
+
+### Troop Distribution Per Episode
+![Accuracy Graph](graphs/hist_troops_deployed.png)
+
+### Total Reward Distribution Per Episode
+![Loss Graph](graphs/hist_total_reward.png)
+
 
 # Possible extensions and open issues
 - The models could be trained more and compared to each other. 
