@@ -1,10 +1,7 @@
 # Merge-Tactics-AI
-In this python project we tried to make an agent play Clash Royal. The basic structire of this project is shown in the UML diagram (UML_diagram.PNG). A short demonstration of the agent we trained in this project is shown in the demo-video (). We decided to implement and train a DQN strategy. To reward the agent we decided to use the information of the decreasing health bars of the agent itself and the enimies in the game. The SelfDefensePriority is a weight between 0 and 1 that indicates if the priority should be to survive as long as possible or th defeat the other persons as fast as possible. In our training we focused on SelfDefensePriority = 1 (survival mode) and SelfDefensePriority = 0 (combat mode). To implement and train the model pytorch was used. 
+In this python project we tried to make an agent play Clash Royal. The basic structire of this project is shown in the UML diagram (UML_diagram.PNG). A short demonstration of the agent we trained in this project is shown in the demo-video. We decided to implement and train a DQN strategy. To reward the agent we decided to use the information of the decreasing health bars of the agent itself and the enimies in the game. The SelfDefensePriority is a weight between 0 and 1 that indicates if the priority should be to survive as long as possible or th defeat the other persons as fast as possible. In our training we focused on SelfDefensePriority = 1 (survival mode) and SelfDefensePriority = 0 (combat mode). To implement and train the model pytorch was used. 
 
 The input for our model is a state vector that contains all the information about what is going on in the arena. The first 3 values are the class_ids of the cards that can be choosen to play, the forth value the amount of elixir, the fifth to eight value are the health values of all players, the ninth value idicates which of the health values is our own and the rest of the array is filled up with the class_ids of the troops that are currently in the arena. 
-
-TO DO: insert filename of demo
-TO DO: decibe which game we are playing in clash royal and from which level on it is available
 
 # Technical Decisions and Dependencies
 
