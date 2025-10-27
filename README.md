@@ -66,9 +66,13 @@ All other information  from the screen (ranking, player position, ...) is just d
 
 ### Troop Distribution Per Episode
 ![Accuracy Graph](graphs/hist_troops_deployed.png)
+Troops Deployed per Episode
+The Troops Deployed per Episode graph shows fluctuating deployment behavior for both the Survival and Combat models. The Combat strategy exhibits more aggressive troop deployment, with frequent peaks and higher variance, suggesting a reactive or opportunistic approach. The Survival strategy, while generally more conservative, demonstrates a few sharp increases that may correspond to critical in-game situations or learning adjustments over episodes.
 
 ### Total Reward Distribution Per Episode
 ![Loss Graph](graphs/hist_total_reward.png)
+Total Reward per Episode
+In the Total Reward per Episode graph, the Combat model achieves higher rewards overall but also experiences larger drops, indicating a riskier and more volatile strategy. The Survival model, by contrast, maintains relatively stable but lower rewards, reflecting a safer, more consistent approach that prioritizes longevity over short-term gains. This contrast highlights a trade-off between aggressive optimization and sustained performance stability.
 
 
 # Possible extensions and open issues
