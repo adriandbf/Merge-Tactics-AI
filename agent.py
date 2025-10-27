@@ -1,5 +1,5 @@
 # Implementation of a Deep-Q-Learning agent
-# till now: almost only copy and paste from https://github.com/krazyness/CRBot-public/blob/main/env.py
+# based on https://github.com/krazyness/CRBot-public/blob/main/env.py
 
 import os
 import torch
@@ -72,7 +72,6 @@ class DQNAgent:
             return
         
         # randomly picking experiences from the replay memory to train
-
         batch = random.sample(self.memory, batch_size)
 
         # training loop to do for each experience in replay memory

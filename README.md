@@ -55,6 +55,7 @@ TO DO: random agent as comparison
 - It would be nice to have an easier way to set up this project, e. g. all the variables for the actions class. To get the specific pixel values we always needed to place the mouse in the specific positions, get the pixel data and enter the values manually.
 - A Linux extension could be implemented as this project only runs on Windows and Darwin.
 - Right now only the DQN agent is implemented, However the project is all set up to plug in a PPO agent as well and test it on this one. 
+- Our testing is not clean yet and should be implemented better so that it is easier to test. 
 
 
 # Credits

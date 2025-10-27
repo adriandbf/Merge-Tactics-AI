@@ -10,28 +10,41 @@ class Actions:
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.current_player_position = 1
         
-        
+        # These values need to be personalized for each set-up
         if self.os_type == "Darwin":
+
+            # Coordinates for arena screenshot: set this values so that the screenshot will 
+            # show the green area of the arena where the troops will appear
             self.TOP_LEFT_X = 1036
             self.TOP_LEFT_Y = 334
             self.BOTTOM_RIGHT_X = 1442
             self.BOTTOM_RIGHT_Y = 834
-            self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
+            self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
+            # Coordinates for the card bar: Set the X and Y again in the top left corner of the card bar 
+            # and then width and heigth so that you have a screenshot that is showing exactly the 
+            # three cards to choose from 
             self.CARD_BAR_X = 1058
             self.CARD_BAR_Y = 856
             self.CARD_BAR_WIDTH = 1312 - 1058
             self.CARD_BAR_HEIGHT = 956 - 856
+
             self.card_width = self.CARD_BAR_WIDTH/3
 
+            # Coordinates for the elixir amount (next to the card bar): Set the X and Y again in the top left corner of the card bar 
+            # and then width and heigth so that you have a screenshot similar to the ones in the elixir_template_images folder 
             self.ELIXIR_X = 1322
             self.ELIXIR_Y = 900
             self.ELIXIR_WIDTH = 1381 - 1322
             self.ELIXIR_HEIGHT = 961 - 900
 
+            # Coordinates for the Health amounts displayed on the top of the game: 
+            # Set the X (different one for each player) and Y again in the top left corner of each number indicating the health 
+            # of the corresponding player. Then set width and heigth so that the images are showing the white numbers only as e. g. 
+            # parts of the health bars in the picture will confues the detection model
             self.HEALTH_WIDTH = 1096 - 1083
             self.HEALTH_HEIGHT = 147 - 137
             self.HEALTH_Y = 137
@@ -40,18 +53,27 @@ class Actions:
             self.HEALTH_X_P3 = 1339
             self.HEALTH_X_P4 = 1467
 
+            # Coordinates for the Health bar colours displayed on the top of the game: 
+            # Set the X (different one for each player) and Y value for a pixel in the health_bar of the players. 
+            # The pixels should be choosed as far as possible to the right so that even if the health decreases 
+            # the color can still be captured
             self.HEALTHBAR_Y = 146*2
             self.HEALTHBAR_X_P1 = 972*2
             self.HEALTHBAR_X_P2 = 1100*2
             self.HEALTHBAR_X_P3 = 1229*2
             self.HEALTHBAR_X_P4 = 1358*2
 
-            # a pixel with a colour that it only has when a game is done
+            # Coordinates for a pixel with a special color that it only has whenever the game is done:
+            # Set the color it has when the game is done as the IS_DONE_COLOR and specify its X and Y coordinates. 
+            # We choose a pixel in the top left part of the game that turns almost black whenever the game is done. 
             self.IS_DONE_X = 1053*2 # Multiplied by 2 for retina display
             self.IS_DONE_y = 927*2
             self.IS_DONE_COLOUR = (178,133,30)
 
-            # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
+            # Coordinates to get the colour of the ranking bars at the end of the game:
+            # At the end of the game our own placement ist colored yellow (einter this colour in RANKING_SELF_COLOR). Give X coordinate (uniform) 
+            # and Y coordinates for each bar in a position where nothing is displayed and the color of the bar can be captured to 
+            # determine which one is ours. We choose a pixel between the players avatars and their names. 
             self.RANKING_X = 1061
             self.RANKING_FRIST_Y = 319
             self.RANKING_SECOND_Y = 444
@@ -60,26 +82,38 @@ class Actions:
             self.RANKING_SELF_COLOR = (170,128,34)
 
         elif self.os_type == "Windows":
+
+            # Coordinates for arena screenshot: set this values so that the screenshot will 
+            # show the green area of the arena where the troops will appear
             self.TOP_LEFT_X = 1476
             self.TOP_LEFT_Y = 366
             self.BOTTOM_RIGHT_X = 1796
             self.BOTTOM_RIGHT_Y = 717
-            self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
+            self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
+            # Coordinates for the card bar: Set the X and Y again in the top left corner of the card bar 
+            # and then width and heigth so that you have a screenshot that is showing exactly the 
+            # three cards to choose from 
             self.CARD_BAR_X = 1476
             self.CARD_BAR_Y = 807
             self.CARD_BAR_WIDTH = 1707 - 1476
             self.CARD_BAR_HEIGHT = 902 - 807
             self.card_width = self.CARD_BAR_WIDTH/3
 
+            # Coordinates for the elixir amount (next to the card bar): Set the X and Y again in the top left corner of the card bar 
+            # and then width and heigth so that you have a screenshot similar to the ones in the elixir_template_images folder 
             self.ELIXIR_X = 1728
             self.ELIXIR_Y = 854
             self.ELIXIR_WIDTH = 1769 - 1728
             self.ELIXIR_HEIGHT = 896-854
 
+            # Coordinates for the Health amounts displayed on the top of the game: 
+            # Set the X (different one for each player) and Y again in the top left corner of each number indicating the health 
+            # of the corresponding player. Then set width and heigth so that the images are showing the white numbers only as e. g. 
+            # parts of the health bars in the picture will confues the detection model
             self.HEALTH_WIDTH = 12
             self.HEALTH_HEIGHT = 11
             self.HEALTH_Y = 112
@@ -88,19 +122,27 @@ class Actions:
             self.HEALTH_X_P3 = 1737
             self.HEALTH_X_P4 = 1860
 
+            # Coordinates for the Health bar colours displayed on the top of the game: 
+            # Set the X (different one for each player) and Y value for a pixel in the health_bar of the players. 
+            # The pixels should be choosed as far as possible to the right so that even if the health decreases 
+            # the color can still be captured
             self.HEALTHBAR_Y = 121
             self.HEALTHBAR_X_P1 = 1385
             self.HEALTHBAR_X_P2 = 1508
             self.HEALTHBAR_X_P3 = 1630
             self.HEALTHBAR_X_P4 = 1754
 
-            # a pixel with a colour that it only has when a game is done
+            # Coordinates for a pixel with a special color that it only has whenever the game is done:
+            # Set the color it has when the game is done as the IS_DONE_COLOR and specify its X and Y coordinates. 
+            # We choose a pixel in the top left part of the game that turns almost black whenever the game is done.
             self.IS_DONE_X = 1414
             self.IS_DONE_y = 189
             self.IS_DONE_COLOUR = (22,22,15)
 
-            # a pixel in all the placement bars that changes to yellow if it is our bar, that exact yellow is the color you should enter
-            self.RANKING_X = 1551
+            # Coordinates to get the colour of the ranking bars at the end of the game:
+            # At the end of the game our own placement ist colored yellow (enter this colour in RANKING_SELF_COLOR). Give X coordinate (uniform) 
+            # and Y coordinates for each bar in a position where nothing is displayed and the color of the bar can be captured to 
+            # determine which one is ours. We choose a pixel between the players avatars and their names.
             self.RANKING_FRIST_Y = 294
             self.RANKING_SECOND_Y = 413
             self.RANKING_THIRD_Y = 527
@@ -222,8 +264,7 @@ class Actions:
 
     def capture_current_player_position(self):
         # returns a value between 1 and 4 to indicate our position in the healthbars, or default_position if detection didn't work
-        # red healthbar color values: (237, 101, 101)
-        # blue healthbar color values: (151, 209, 234)
+        # red and blue healthbar color values might need to be adjusted if run on a different setup
         self.default_position = 1
 
         colour1 = pyautogui.pixel(self.HEALTHBAR_X_P1, self.HEALTHBAR_Y)

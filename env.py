@@ -6,13 +6,12 @@ import time
 import os
 import platform
 
-# to do: refactor-statesize in constant
 
 class MergeTacticsEnv:
     def __init__(self):
-        # maximal state_size -3 troops in the arena can be included in the calculations
+        # maximal state_size - 9 troops in the arena can be included in the calculations
         self.os_type = platform.system()
-        self.state_size = 27  # to od: explain why 27       
+        self.state_size = 27  # 18 troops can be included in the calculation, which is the maximal amount in the game      
         self.action_size = 3         
         self.state = np.zeros(self.state_size, dtype=np.int32)  
         self.state[4:8] = 12
@@ -71,7 +70,6 @@ class MergeTacticsEnv:
         return self.state
 
     # a function that performs a given action in the actual game and returns the next_state, reward, done-flag
-    # TO DO: implement done flag
     def step(self, action_index):
         """
         Perform one step in the environment.
@@ -151,7 +149,6 @@ class MergeTacticsEnv:
         cards = [self.detector.detect_card(i) for i in range(3)]
         troop_classes = [t['class_id'] for t in troops]
         card_classes = [c[0]['class_id'] if c else 0 for c in cards]
-        # print(card_classes) #testing
         
         elixir = self.detector.detect_elixir()
 
@@ -162,7 +159,7 @@ class MergeTacticsEnv:
 
         current_player_position = self.actor.get_current_player_position()
 
-        # State vector with cards, elixir, and troops
+        # State vector with cards, elixir, healths, position of the players helath and troops
         obs = card_classes + [elixir] + [health_p1] + [health_p2] + [health_p3] + [health_p4] + [current_player_position] + troop_classes
 
         # padding the state vector to the right size (22)
@@ -175,10 +172,6 @@ class MergeTacticsEnv:
 
         if self.constant_reward == True:
             return 0
-        # improvement: add error functions and default_values if int detection didn't work
-        # improvement ideas: detect player we are actually playing and only take his loss of health
-        # problem: changes may need time, so probably we are also just seeing the outcome of earlier 
-        # actions and not from tej current one
 
         # weight between 0 and 1 that determines how much emphasize the reward function gives to defending 
         # the own health in comparison to brining the health of the other characters down

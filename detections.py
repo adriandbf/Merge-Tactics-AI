@@ -25,6 +25,7 @@ class Detection:
         try:
             image_path = f"screenshots/arena.png"
             result = client.run_workflow(
+                # insert your workspace name here
                 workspace_name="adriandbf",
                 workflow_id="troopdetection",
                 images={"image": image_path},
@@ -40,6 +41,7 @@ class Detection:
         image_path = f"screenshots/card_{card_nr+1}.png"
         try:
             result = client.run_workflow(
+                # insert your workspace name here
                 workspace_name="adriandbf",
                 workflow_id="carddetection",
                 images={"image": image_path},
