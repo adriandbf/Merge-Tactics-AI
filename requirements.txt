@@ -1,0 +1,33 @@
+# Core
+numpy
+torch
+torchvision
+opencv-python
+pillow
+matplotlib
+tqdm
+
+# RL + Agent tools
+gymnasium
+scipy
+
+# Screen capture / automation
+pyautogui
+mss
+pynput
+
+# OCR / detection
+easyocr
+inference-sdk
+
+# File handling + metrics
+pandas
+json5
+seaborn
+
+# Utilities
+keyboard
+colorama
+
+# For roboflow workflows
+roboflow
