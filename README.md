@@ -74,6 +74,9 @@ The Troops Deployed per Episode graph shows fluctuating deployment behavior for 
 Total Reward per Episode
 In the Total Reward per Episode graph, the Combat model achieves higher rewards overall but also experiences larger drops, indicating a riskier and more volatile strategy. The Survival model, by contrast, maintains relatively stable but lower rewards, reflecting a safer, more consistent approach that prioritizes longevity over short-term gains. This contrast highlights a trade-off between aggressive optimization and sustained performance stability.
 
+For corrrectly interpreting this values it is important to know that in survival mode there are only negative rewards as the reward is the health decrease whlie in the combat model the rewards are only positive for decreasing the health of enimies. Also in the combat mode the health of all the enemies is added up, which leads to the two rewards not having the same scale and beeing comparable. Other values (e. g. positive values in the survival reward function) might be due to missdetecting the health numbers and default beeing set to 10 if teh detection goes wrong. 
+Also the total amount at the end of the game does not directly indicate how good it plays. It is only temporary accurate for the step that is taken and not as a total sum of the game. 
+
 
 # Possible extensions and open issues
 - The models could be trained more and compared to each other. 
